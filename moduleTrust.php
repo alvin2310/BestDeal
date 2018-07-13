@@ -14,7 +14,7 @@ class Module{
       else{
         while ($data=mysqli_fetch_assoc($hasil)) {
           $item=array(
-
+            
           );
           array_push($tblUser,$item);
         }
