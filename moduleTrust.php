@@ -5,10 +5,7 @@ class Module{
 
     //Pengumpulan Data
       $tblUser = array();
-      $query = "SELECT A.user_id,B.category FROM tbl_user A
-                LEFT JOIN tbl_friend B ON A.user_id=B.user_friend AND B.user_id=$user_id
-                WHERE A.user_id<>$user_id AND B.category IS NOT NULL
-                ORDER BY A.user_id";
+      $query = "SELECT * FROM tbl_users WHERE user_id<>$user_id";
       //echo $query;
       $hasil = $kns->OpenCon()->query($query);
       if(mysqli_num_rows($hasil)<1){
@@ -16,19 +13,33 @@ class Module{
       }
       else{
         while ($data=mysqli_fetch_assoc($hasil)) {
-          $tblUser[]=$data;
+          $item=array(
+
+          );
+          array_push($tblUser,$item);
         }
       }
-      //print_r($tblUser);
+      $thisUser = array();
+      $query = "SELECT * FROM tbl_users WHERE user_id=$user_id";
+      //echo $query;
+      $hasil = $kns->OpenCon()->query($query);
+      if(mysqli_num_rows($hasil)<1){
+        echo "Tidak ada Data Hasil";
+      }
+      else{
+        while ($data=mysqli_fetch_assoc($hasil)) {
+          $item=array(
+
+          );
+          array_push($thisUser,$item);
+        }
+      }
     //End Data
 
     //Find a Node
       //$tblUser = array();
       for($i=0;$i<count($tblUser);$i++){
-        $query = "SELECT A.user_id,B.category FROM tbl_user A
-                  LEFT JOIN tbl_friend B ON A.user_id=B.user_friend AND B.user_id=".$tblUser[$i]["user_id"]."
-                  WHERE A.user_id<>".$tblUser[$i]["user_id"]." AND B.category IS NOT NULL
-                  ORDER BY A.user_id";
+        $query = "";
         //echo $query;
         $hasil = $kns->OpenCon()->query($query);
         if(mysqli_num_rows($hasil)<1){
@@ -37,7 +48,7 @@ class Module{
         else{
           while ($data=mysqli_fetch_assoc($hasil)) {
             foreach ($tblUser as $key => $val) {
-              echo $val['user_id']."<br>";
+              echo $val['user_id']."\n";
               /* if ($val['user_id'] === $data['user_id']) {
                 echo "<br>".$data['user_id']." and ".$val['category'];
               } */
