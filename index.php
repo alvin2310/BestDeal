@@ -66,8 +66,8 @@
               <nav class="menu menu--iris">
                 <ul class="nav navbar-nav menu__list">
                   <li class="menu__item menu__item--current"><a href="index.php" class="menu__link">Home</a></li>
-                  <li class="menu__item"><a href="#gallery" class="menu__link scroll">Search</a></li>
-                  <li class="menu__item"><a href="./Drawing/index.php" class="menu__link scroll">Design</a></li>
+                  <li class="menu__item"><a href="#gallery" class="menu__link scroll">Gallery</a></li>
+                  <li class="menu__item"><a href="./about.php" class="menu__link scroll">About Us</a></li>
                   <li class="menu__item"><a href="#" class="menu__link scroll" data-toggle="modal" data-target="#login-modal">Login</a></li>
                 </ul>
               </nav>
@@ -84,10 +84,10 @@
                   <div class="modal-body">
                     <form method="post" name="login">
                       <div class="form-group">
-                        <input type="text" class="form-control" id="user_modal" name="username" placeholder="username" minlength="4" maxlength="20">
+                        <input type="text" class="form-control" id="user_modal" name="username" placeholder="username" maxlength="20">
                       </div>
                       <div class="form-group">
-                        <input type="password" class="form-control" id="password_modal" name="password" placeholder="password" minlength="5" maxlength="16">
+                        <input type="password" class="form-control" id="password_modal" name="password" placeholder="password" maxlength="16">
                       </div>
                       <p class="text-center">
                         <button type="submit" name="login" class="btn btn-info btn-lg"><i class="fa fa-sign-in"></i> Log in</button>

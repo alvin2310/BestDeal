@@ -1,6 +1,6 @@
 <?php
 class Module{
-  function home($user_id,$agama){
+  function home($user_id){
     $kns = new DB_con();
 
     //Pengumpulan Data
@@ -14,11 +14,17 @@ class Module{
       else{
         while ($data=mysqli_fetch_assoc($hasil)) {
           $item=array(
-            
+            "user_id" => $data['user_id'],
+            "user_name" => $data['user_name'],
+            "user_earn" => $data['user_earn'],
+            "user_spent" => $data['user_spent'],
+            "selisih" => $data['user_earn']-$data['user_spent'],
+            "simpanan" => $data['simpanan']
           );
           array_push($tblUser,$item);
         }
       }
+    //User Online
       $thisUser = array();
       $query = "SELECT * FROM tbl_users WHERE user_id=$user_id";
       //echo $query;
@@ -29,36 +35,77 @@ class Module{
       else{
         while ($data=mysqli_fetch_assoc($hasil)) {
           $item=array(
-
+            "user_id" => $data['user_id'],
+            "user_name" => $data['user_name'],
+            "user_earn" => $data['user_earn'],
+            "user_spent" => $data['user_spent'],
+            "selisih" => $data['user_earn']-$data['user_spent'],
+            "simpanan" => $data['simpanan']
           );
           array_push($thisUser,$item);
         }
       }
     //End Data
 
-    //Find a Node
-      //$tblUser = array();
+    //Find X
+      $X = array();
       for($i=0;$i<count($tblUser);$i++){
-        $query = "";
-        //echo $query;
-        $hasil = $kns->OpenCon()->query($query);
-        if(mysqli_num_rows($hasil)<1){
-          echo "Tidak ada Data Hasil";
-        }
-        else{
-          while ($data=mysqli_fetch_assoc($hasil)) {
-            foreach ($tblUser as $key => $val) {
-              echo $val['user_id']."\n";
-              /* if ($val['user_id'] === $data['user_id']) {
-                echo "<br>".$data['user_id']." and ".$val['category'];
-              } */
-            }
-          }
+        $X[] = $tblUser[$i]['selisih'];
+      }
+    //End X
+
+    //Find Fx
+      $Fx = array();
+      for($i=0;$i<count($tblUser);$i++){
+        $Fx[] = $tblUser[$i]['simpanan'];
+      }
+    //End Fx
+
+    //Mencari Harga Cocok
+      $F10 = ($Fx[1]-$Fx[0])/($X[1]-$X[0]);
+      $F21 = ($Fx[2]-$Fx[1])/($X[2]-$X[1]);
+      $F32 = ($Fx[3]-$Fx[2])/($X[3]-$X[2]);
+
+      $F210 = ((float)$F21-(float)$F10)/($X[2]-$X[0]);
+      $F321 = ((float)$F32-(float)$F21)/($X[3]-$X[1]);
+
+      $F3210 = ((float)$F321-(float)$F210)/($X[3]-$X[0]);
+
+      $resultPrice = 
+      (
+        $Fx[0] + (
+          $F10 * ($thisUser[0]['selisih']-$X[0])
+        ) + (
+          $F210 * (($thisUser[0]['selisih']-$X[0])*($thisUser[0]['selisih']-$X[1]))
+        ) + (
+          $F3210 * (($thisUser[0]['selisih']-$X[0])*($thisUser[0]['selisih']-$X[1])*($thisUser[0]['selisih']-$X[2]))
+        ) 
+      ) * 5;
+    //End Harga
+
+    //Tampilkan Daftar
+      $HasilAkhir = array();
+      $query = "SELECT * FROM tbl_rumah WHERE harga<='$resultPrice' ORDER BY harga";
+      //echo $query;
+      $hasil = $kns->OpenCon()->query($query);
+      if(mysqli_num_rows($hasil)<1){
+        echo "Tidak ada Data Hasil";
+      }
+      else{
+        while ($data=mysqli_fetch_assoc($hasil)) {
+          $item=array(
+            "rumah_id" => $data['rumah_id'],
+            "rumah_name" => $data['rumah_name'],
+            "ukuran" => $data['ukuran'],
+            "harga" => $data['harga'],
+            "rumah_photo" => $data['rumah_photo']
+          );
+          array_push($HasilAkhir,$item);
         }
       }
-    //End Binning
+    //End
 
-    //return $HasilAkhir;
+    return $HasilAkhir;
   }
 }
 ?>

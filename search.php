@@ -1,9 +1,9 @@
 <?php
   session_start();
-  include('../config.php');
+  include('config.php');
 
   if (!isset($_SESSION['user_id'])){
-    header("Location: ../index.php");
+    header("Location: ./index.php");
   }
 ?>
 <html lang="zxx">
@@ -18,13 +18,13 @@
         function hideURLbar(){ window.scrollTo(0,1); } </script>
     
     <!-- Favicon  -->
-    <link rel="icon" href="../favicon.ico">
+    <link rel="icon" href="./favicon.ico">
     <!-- //for-mobile-apps -->
-    <link href="../css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
-    <link rel="stylesheet" href="../css/cm-overlay.css">
-    <link href="../css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/cm-overlay.css">
+    <link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
     <!-- font-awesome icons -->
-    <link href="../css/font-awesome.css" rel="stylesheet"> 
+    <link href="css/font-awesome.css" rel="stylesheet"> 
     <!-- //font-awesome icons -->
     <link href="//fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
     <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
@@ -54,13 +54,13 @@
             <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
               <nav class="menu menu--iris">
                 <ul class="nav navbar-nav menu__list">
-                  <li class="menu__item"><a href="../index.php" class="menu__link scroll">Home</a></li>
-                  <li class="menu__item"><a href="../search.php" class="menu__link scroll">Search</a></li>
-                  <li class="menu__item menu__item--current"><a href="./index.php" class="menu__link">Design</a></li>
+                  <li class="menu__item"><a href="index.php" class="menu__link">Home</a></li>
+                  <li class="menu__item menu__item--current"><a href="./search.php" class="menu__link scroll">Search</a></li>
+                  <li class="menu__item"><a href="./Drawing/index.php" class="menu__link scroll">Design</a></li>
                   <li class="dropdown menu__item">
                     <a href="#" class="dropdown-toggle menu__link" data-toggle="dropdown"><?php echo $_SESSION['user_name']; ?><b class="caret"></b></a>
                     <ul class="dropdown-menu agile_short_dropdown">
-                      <li><a class="scroll" href="../profile.php">Profile</a></li>
+                      <li><a class="scroll" href="./profile.php">Profile</a></li>
                       <!-- <li><a class="scroll" href="#">Settings</a></li> -->
                       <li><a class="scroll" href="./Login/logout.php">Logout</a></li>
                     </ul>
@@ -72,13 +72,27 @@
         </div>
       </div>
     </div>
-    <?php
-    include("canvas.php");
-    ?>
-    <script src="../js/jquery-2.2.3.min.js"></script>
+    <!-- gallery -->
+			<div class="gallery" id="gallery">
+				<div class="container">
+					<div class="wthree-tittle">
+							<h3 class="agile_title one">Recommended</h3>
+						<p class="w3l-agile-its-title">Properties</p>
+					</div>
+					<!-- Content List Data -->
+					<div id="myTabContent" class="tab-content">
+            <form>
+              <input class="form-control" placeholder="Keyword" />
+              <button class="btn btn-primary">Search</button>
+            </form>
+					</div>
+				</div>
+			</div>
+		<!-- //gallery -->
+    <script src="js/jquery-2.2.3.min.js"></script>
     <!-- Stats-Number-Scroller-Animation-JavaScript -->
-      <script src="../js/waypoints.min.js"></script> 
-      <script src="../js/counterup.min.js"></script> 
+      <script src="js/waypoints.min.js"></script> 
+      <script src="js/counterup.min.js"></script> 
       <script>
         jQuery(document).ready(function( $ ) {
           $('.counter').counterUp({
@@ -88,7 +102,7 @@
         });
       </script>
     <!-- //Stats-Number-Scroller-Animation-JavaScript -->
-    <script src="../js/responsiveslides.min.js"></script>
+    <script src="js/responsiveslides.min.js"></script>
     <script>
       // You can also use "$(window).load(function() {"
       $(function () {
@@ -108,16 +122,16 @@
         });
       });
     </script>
-    <script src="../js/bootstrap.js"></script>
-    <script src="../js/jquery.tools.min.js"></script>
-    <script src="../js/jquery.mobile.custom.min.js"></script>
-    <script src="../js/jquery.cm-overlay.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/jquery.tools.min.js"></script>
+    <script src="js/jquery.mobile.custom.min.js"></script>
+    <script src="js/jquery.cm-overlay.js"></script>
     <script>
       $(document).ready(function(){
         $('.cm-overlay').cmOverlay();
       });
     </script>
-    <script src="../js/jarallax.js"></script>
+    <script src="js/jarallax.js"></script>
     <script type="text/javascript">
       /* init Jarallax */
       $('.jarallax').jarallax({
@@ -126,7 +140,7 @@
         imgHeight: 768
       })
     </script>
-    <script type="text/javascript" src="../js/jquery.flexisel.js"></script>
+    <script type="text/javascript" src="js/jquery.flexisel.js"></script>
     <!-- here stars scrolling icon -->
       <script type="text/javascript">
         $(document).ready(function() {

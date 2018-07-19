@@ -9,23 +9,18 @@ $response = array("error" => FALSE);
 
 if(isset($_POST['user_id'])){
   $userid = $_POST['user_id'];
-  $agama = $_POST['agama'];
-  $user = $db->home($userid,$agama);
-  echo json_encode($user);
-    /* if ($user != false) {
+  $user = $db->home($userid);
+    if ($user != false) {
       $n = count($user);
       $response["error"] = FALSE;
       foreach ($user as $i => $value){
-        if(isset($value['user_id'])) {
+        if(isset($value['rumah_id'])) {
           $response[] = (object) array(
-            'user_id' => $value["user_id"],
-            'user_name' => $value["user_name"],
-            'age' => $value["Age"],
-            'location' => $value["location"],
-            'like_count' => $value["like_count"],
-            'view_count' => $value["view_count"],
-            'photo_pict' => isset($value["photo_pict"]) ? $value["photo_pict"] : '@drawable/ic_account',
-            'last_seen' => $value['last_seen']
+            "rumah_id" => $value['rumah_id'],
+            "rumah_name" => $value['rumah_name'],
+            "ukuran" => $value['ukuran'],
+            "harga" => $value['harga'],
+            "rumah_photo" => isset($value['rumah_photo']) ? $value['rumah_photo'] : '@drawable/ic_home'
           );
         }
       }
@@ -36,7 +31,7 @@ if(isset($_POST['user_id'])){
         $response["error"] = TRUE;
         $response["error_msg"] = "Data yang anda cari tidak ada";
         echo json_encode($response);
-    } */
+    }
 } else {
   $response["error"] = TRUE;
   $response["error_msg"] = "Silahkan login terlebih dahulu";
