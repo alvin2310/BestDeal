@@ -1,6 +1,18 @@
 <?php
   session_start();
   include('../config.php');
+  include_once './auth.php';
+  $user = new Auth();
+
+  if (isset($_POST['login'])) {
+		extract($_POST);
+		$login = $user->AuthLogin($username, $password);
+		if ($login) {
+				header("Location: ../home.php");
+		} else {
+				echo "<script>alert('Wrong username or password');</script>";
+		}
+  }
 
   if (isset($_SESSION['user_id'])){
     header("Location: ../home.php");
@@ -65,15 +77,44 @@
             <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
               <nav class="menu menu--iris">
                 <ul class="nav navbar-nav menu__list">
-                  <li class="menu__item menu__item--current"><a href="../index.php" class="menu__link">Home</a></li>
+                  <li class="menu__item"><a href="../index.php" class="menu__link">Home</a></li>
                   <li class="menu__item"><a href="../index.php#gallery" class="menu__link scroll">Gallery</a></li>
                   <li class="menu__item"><a href="./about.php" class="menu__link scroll">About Us</a></li>
                   <li class="menu__item"><a href="#" class="menu__link scroll" data-toggle="modal" data-target="#login-modal">Login</a></li>
-                  <li class="menu__item"><a href="./register.php" class="menu__link scroll">Register</a></li>
+                  <li class="menu__item menu__item--current"><a href="./register.php" class="menu__link scroll">Register</a></li>
                 </ul>
               </nav>
             </div>
           </nav>
+          <!-- Login Modal -->
+            <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="Login">User login</h4>
+                  </div>
+                  <div class="modal-body">
+                    <form method="post" name="login">
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="user_modal" name="username" placeholder="username" maxlength="20">
+                      </div>
+                      <div class="form-group">
+                        <input type="password" class="form-control" id="password_modal" name="password" placeholder="password" maxlength="16">
+                      </div>
+                      <p class="text-center">
+                        <button type="submit" name="login" class="btn btn-primary btn-lg"><i class="fa fa-sign-in"></i> Log in</button>
+                      </p>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <!-- <p class="text-center text-muted">Not registered yet?</p>
+                    <p class="text-center text-muted"><a href="./Login/register.php"><strong>Register now</strong></a>! It is easy and done in 1&nbsp;minute!</p> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          <!-- End Login Modal -->
         </div>
       </div>
     </div>
