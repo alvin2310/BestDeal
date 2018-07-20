@@ -69,6 +69,7 @@
                   <li class="menu__item"><a href="#gallery" class="menu__link scroll">Gallery</a></li>
                   <li class="menu__item"><a href="./about.php" class="menu__link scroll">About Us</a></li>
                   <li class="menu__item"><a href="#" class="menu__link scroll" data-toggle="modal" data-target="#login-modal">Login</a></li>
+                  <li class="menu__item"><a href="./Login/register.php" class="menu__link scroll">Register</a></li>
                 </ul>
               </nav>
             </div>
@@ -90,13 +91,13 @@
                         <input type="password" class="form-control" id="password_modal" name="password" placeholder="password" maxlength="16">
                       </div>
                       <p class="text-center">
-                        <button type="submit" name="login" class="btn btn-info btn-lg"><i class="fa fa-sign-in"></i> Log in</button>
+                        <button type="submit" name="login" class="btn btn-primary btn-lg"><i class="fa fa-sign-in"></i> Log in</button>
                       </p>
                     </form>
                   </div>
                   <div class="modal-footer">
-                    <p class="text-center text-muted">Not registered yet?</p>
-                    <p class="text-center text-muted"><a href="./Login/register.php"><strong>Register now</strong></a>! It is easy and done in 1&nbsp;minute!</p>
+                    <!-- <p class="text-center text-muted">Not registered yet?</p>
+                    <p class="text-center text-muted"><a href="./Login/register.php"><strong>Register now</strong></a>! It is easy and done in 1&nbsp;minute!</p> -->
                   </div>
                 </div>
               </div>

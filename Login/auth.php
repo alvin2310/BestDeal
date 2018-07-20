@@ -23,10 +23,10 @@ class Auth{
         //header('Location: ../index.php');
     }
 
-    public function AuthRegis($name,$pass,$alamat,$no_hp,$earn,$spent){
+    public function AuthRegis($username,$password,$firstname,$alamat,$kota,$provinsi,$email,$no_hp,$earn,$spent,$simpanan){
         $pass = hash('sha256', $pass);
 
-        $query = "INSERT INTO tbl_users(user_name,user_password,first_name,alamat,no_hp,user_earn,user_spent) VALUES('$name','$pass','$name',$alamat,'$no_hp','$earn','$spent')";
+        $query = "INSERT INTO tbl_users(user_name,user_password,first_name,alamat,kota,provinsi,no_hp,user_earn,user_spent,simpanan) VALUES('$name','$pass','$name','$alamat','$kota','$provinsi','$no_hp','$earn','$spent','$simpanan')";
         if($this->db->query($query)){
             return true;
         }
