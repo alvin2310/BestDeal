@@ -17,12 +17,11 @@ if(isset($_POST['user_id'])){
         $response[] = (object) array(
           "id" => $value['id'],
           "name" => $value['name'],
-          "alamat" => $value['alamat'],
-          "hp" => $value['hp'],
-          "description" => $value['description'],
-          "photo_pict" => isset($value["photo_pict"]) ? $value["photo_pict"] : 'empty',
-          "category" => $value['category'],
-          "rating" => $value['rating']
+          "ukuran" => $value['ukuran'],
+          "jenis" => $value['jenis'],
+          "harga" => $value['harga'],
+          "photo" => isset($value["photo"]) ? $value["photo"] : 'empty',
+          "avg" => isset($value['avg']) ? $value['avg'] : '0.00'
         );
       }
     }
