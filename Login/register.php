@@ -20,10 +20,13 @@
 
   if (isset($_POST['register'])) {
     extract($_POST);
-    $register = $user->AuthRegis($username,$password,$firstname,$alamat,$kota,$provinsi,$email,$no_hp,$earn,$spent,$simpanan);
+    $register = $user->AuthRegis($username,$password,$firstname,$alamat,$kota,$provinsi,$email,$no_hp); //,$earn,$spent,$simpanan);
 		if ($register) {
-        echo "<script type='text/javascript'>alert('Registration Successfully please Login');</script>";
-				header("Location: ../index.php");
+        echo "<script type='text/javascript'>
+          alert('Registration Successfully please Login');
+          window.location = '../index.php';
+        </script>";
+				//header("Location: ../index.php");
 		} else {
 				echo "<script>alert('Something Wrong / ID / Username already exists');</script>";
 		}
@@ -58,6 +61,8 @@
         setTimeout(titleMarquee, 100);
       })();
     </script>
+
+    <script src="../js/jquery-2.2.3.min.js"></script>
   </head>
   <body>
     <div class="banner-top">
@@ -137,7 +142,11 @@
                     <input type="text" class="form-control" id="first_modal" name="firstname" placeholder="First Name" autocomplete="off" maxlength="20" required>
                   </div>
                   <div class="form-group">
-                    <input type="password" class="form-control" id="password_modal" name="password" placeholder="password" minlength="5" maxlength="16" required>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="password" maxlength="16" required>
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="confirm password" maxlength="16" required>
+                    <span id='message'></span>
                   </div>
                   <div class="form-group">
                     <textarea class="form-control" id="alamat" name="alamat" rows="5" required></textarea>
@@ -154,7 +163,7 @@
                   <div class="form-group">
                     <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder="No Hp" minlength="10" maxlength="12" required>
                   </div>
-                  <div class="form-group">
+                  <!-- <div class="form-group">
                     <input type="number" class="form-control" id="earn" name="earn" placeholder="User Earn" autocomplete="off" maxlength="20" required>
                   </div>
                   <div class="form-group">
@@ -162,18 +171,35 @@
                   </div>
                   <div class="form-group">
                     <input type="number" class="form-control" id="simpanan" name="simpanan" placeholder="Simpanan" autocomplete="off" maxlength="20" required>
-                  </div>
+                  </div> -->
                   <p class="text-center">
-                    <button type="submit" name="register" class="btn btn-info btn-lg"><i class="fa fa-sign-in"></i> Register</button>
+                    <button type="submit" id="register" name="register" class="btn btn-info btn-lg" onclick="return(submitlogin());"><i class="fa fa-sign-in"></i> Register</button>
                   </p>
                 </form>
 							</div>
+              <script type="text/javascript">
+                function submitlogin() {
+                  var form = document.register;
+                  if (form.password.value != form.confirm_password.value) {
+                    alert("Password did not match");
+                    return false;
+                  }
+                }
+                $('#password, #confirm_password').on('keyup', function () {
+                  if ($('#password').val() == ""){
+                    $('#message').html('Password can\'t be Empty').css('color', 'red');
+                  } else if ($('#password').val() == $('#confirm_password').val()) {
+                    $('#message').html('Matching').css('color', 'green');
+                  }
+                  else {
+                    $('#message').html('Not Matching').css('color', 'red');
+                  }
+                });
+              </script>
 						</div>
 					</div>
 				</div>
 			</div>
-		<!-- //gallery -->
-    <script src="../js/jquery-2.2.3.min.js"></script>
     <!-- Stats-Number-Scroller-Animation-JavaScript -->
       <script src="../js/waypoints.min.js"></script> 
       <script src="../js/counterup.min.js"></script> 
