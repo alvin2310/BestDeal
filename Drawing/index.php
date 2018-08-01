@@ -62,7 +62,7 @@
                     <ul class="dropdown-menu agile_short_dropdown">
                       <li><a class="scroll" href="../profile.php">Profile</a></li>
                       <!-- <li><a class="scroll" href="#">Settings</a></li> -->
-                      <li><a class="scroll" href="./Login/logout.php">Logout</a></li>
+                      <li><a class="scroll" href="../Login/logout.php">Logout</a></li>
                     </ul>
                   </li>
                 </ul>
