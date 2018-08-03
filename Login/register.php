@@ -158,7 +158,7 @@
                     <input type="text" class="form-control" id="provinsi" name="provinsi" placeholder="Provinsi" autocomplete="off" maxlength="20" required>
                   </div>
                   <div class="form-group">
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" autocomplete="off" maxlength="20" required>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" autocomplete="off" required>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder="No Hp" minlength="10" maxlength="12" required>

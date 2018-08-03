@@ -5,6 +5,20 @@
   if (!isset($_SESSION['user_id'])){
     header("Location: ./index.php");
   }
+  
+  if (isset($_POST['submit'])) {
+    extract($_POST);
+    $register = $user->AuthRegis($username,$password,$firstname,$alamat,$kota,$provinsi,$email,$no_hp); //,$earn,$spent,$simpanan);
+		if ($register) {
+        echo "<script type='text/javascript'>
+          alert('Registration Successfully please Login');
+          window.location = '../index.php';
+        </script>";
+				//header("Location: ../index.php");
+		} else {
+				echo "<script>alert('Something Wrong / ID / Username already exists');</script>";
+		}
+  }
 ?>
 <html lang="zxx">
   <head>
@@ -79,12 +93,76 @@
 							<h3 class="agile_title one">Profile</h3>
 						<p class="w3l-agile-its-title">User Profile.</p>
 					</div>
+          <?php
+            //Load Profile
+            $kns = new DB_con();
+            $profile = array();
+            $query = "SELECT * FROM tbl_users WHERE user_id=".$_SESSION['user_id'];
+            $result = $kns->OpenCon()->query($query);
+            while($data = $result->fetch_array(MYSQLI_ASSOC)){
+              $profile[]=$data;
+            }
+          ?>
 					<!-- Content List Data -->
 					<div id="myTabContent" class="tab-content">
-						<form>
-              <input class="form-control" placeholder="Username" />  
+            <form method="post" name="register">
+              <div class="form-group">
+                <input type="text" class="form-control" id="user_modal" name="username" placeholder="username" autocomplete="off" maxlength="20" readonly value="<?php echo $profile[0]['user_name'] ?>">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="first_modal" name="firstname" placeholder="First Name" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['first_name'] ?>" required>
+              </div>
+              <div class="form-group">
+                <input type="password" class="form-control" id="password" name="password" placeholder="password" maxlength="16">
+              </div>
+              <div class="form-group">
+                <textarea class="form-control" id="alamat" name="alamat" rows="5" required><?php echo $profile[0]['alamat'] ?></textarea>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="kota" name="kota" placeholder="Kota" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['kota'] ?>" required>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="provinsi" name="provinsi" placeholder="Provinsi" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['provinsi'] ?>" required>
+              </div>
+              <div class="form-group">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email" autocomplete="off" value="<?php echo $profile[0]['email'] ?>" required>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder="No Hp" minlength="10" maxlength="12" value="<?php echo $profile[0]['no_telp'] ?>" required>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="earn" name="earn" placeholder="User Earn" value="<?php echo $profile[0]['user_earn'] ?>" autocomplete="off" maxlength="20" required>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="spent" name="spent" placeholder="User Spent" value="<?php echo $profile[0]['user_spent'] ?>" autocomplete="off" maxlength="20" required>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="simpanan" name="simpanan" placeholder="Simpanan" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['simpanan'] ?>" required>
+              </div>
+              <p class="text-center">
+                <button type="submit" id="save" name="save" class="btn btn-info btn-lg" onclick="return(submitlogin());"><i class="fa fa-save"></i> Save</button>
+              </p>
             </form>
 					</div>
+          <script type="text/javascript">
+            /* function submitlogin() {
+              var form = document.register;
+              if (form.password.value != form.confirm_password.value) {
+                alert("Password did not match");
+                return false;
+              }
+            }
+            $('#password, #confirm_password').on('keyup', function () {
+              if ($('#password').val() == ""){
+                $('#message').html('Password can\'t be Empty').css('color', 'red');
+              } else if ($('#password').val() == $('#confirm_password').val()) {
+                $('#message').html('Matching').css('color', 'green');
+              }
+              else {
+                $('#message').html('Not Matching').css('color', 'red');
+              }
+            }); */
+          </script>
 				</div>
 			</div>
 		<!-- //gallery -->
