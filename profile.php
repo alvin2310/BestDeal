@@ -1,18 +1,20 @@
 <?php
   session_start();
   include('config.php');
+  include_once './Login/auth.php';
+  $user = new User();
 
   if (!isset($_SESSION['user_id'])){
     header("Location: ./index.php");
   }
   
-  if (isset($_POST['submit'])) {
+  if (isset($_POST['save'])) {
     extract($_POST);
-    $register = $user->AuthRegis($username,$password,$firstname,$alamat,$kota,$provinsi,$email,$no_hp); //,$earn,$spent,$simpanan);
-		if ($register) {
+    $profile = $user->saveProfile($_SESSION['user_id'],$password,$firstname,$lasttname,$alamat,$kota,$provinsi,$email,$no_hp,$earn,$spent,$simpanan);
+		if ($profile) {
         echo "<script type='text/javascript'>
-          alert('Registration Successfully please Login');
-          window.location = '../index.php';
+          alert('Profile Save Successfully !');
+          window.location = './index.php';
         </script>";
 				//header("Location: ../index.php");
 		} else {
@@ -69,6 +71,7 @@
               <nav class="menu menu--iris">
                 <ul class="nav navbar-nav menu__list">
                   <li class="menu__item"><a href="index.php" class="menu__link">Home</a></li>
+                  <li class="menu__item"><a href="./recommend.php" class="menu__link scroll">See Recommendation</a></li>
                   <li class="menu__item"><a href="./search.php" class="menu__link scroll">Search</a></li>
                   <li class="menu__item"><a href="./Drawing/index.php" class="menu__link scroll">Design</a></li>
                   <li class="dropdown menu__item menu__item--current">
@@ -105,39 +108,42 @@
           ?>
 					<!-- Content List Data -->
 					<div id="myTabContent" class="tab-content">
-            <form method="post" name="register">
+            <form method="post" name="profile">
               <div class="form-group">
-                <input type="text" class="form-control" id="user_modal" name="username" placeholder="username" autocomplete="off" maxlength="20" readonly value="<?php echo $profile[0]['user_name'] ?>">
+                <input type="text" class="form-control" id="user_modal" name="username" placeholder="username" autocomplete="off" maxlength="20" readonly value="<?php echo $profile[0]['user_name']; ?>">
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="first_modal" name="firstname" placeholder="First Name" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['first_name'] ?>" required>
+                <input type="text" class="form-control" id="first_modal" name="firstname" placeholder="First Name" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['first_name']; ?>" required>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="last_modal" name="lastname" placeholder="Last Name" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['last_name']; ?>">
               </div>
               <div class="form-group">
                 <input type="password" class="form-control" id="password" name="password" placeholder="password" maxlength="16">
               </div>
               <div class="form-group">
-                <textarea class="form-control" id="alamat" name="alamat" rows="5" required><?php echo $profile[0]['alamat'] ?></textarea>
+                <textarea class="form-control" id="alamat" name="alamat" rows="5" required><?php echo $profile[0]['alamat']; ?></textarea>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="kota" name="kota" placeholder="Kota" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['kota'] ?>" required>
+                <input type="text" class="form-control" id="kota" name="kota" placeholder="Kota" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['kota']; ?>" required>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="provinsi" name="provinsi" placeholder="Provinsi" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['provinsi'] ?>" required>
+                <input type="text" class="form-control" id="provinsi" name="provinsi" placeholder="Provinsi" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['provinsi']; ?>" required>
               </div>
               <div class="form-group">
-                <input type="email" class="form-control" id="email" name="email" placeholder="Email" autocomplete="off" value="<?php echo $profile[0]['email'] ?>" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email" autocomplete="off" value="<?php echo $profile[0]['email']; ?>" required>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder="No Hp" minlength="10" maxlength="12" value="<?php echo $profile[0]['no_telp'] ?>" required>
+                <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder="No Hp" minlength="10" maxlength="12" value="<?php echo $profile[0]['no_telp']; ?>" required>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="earn" name="earn" placeholder="User Earn" value="<?php echo $profile[0]['user_earn'] ?>" autocomplete="off" maxlength="20" required>
+                <input type="text" class="form-control" id="earn" name="earn" placeholder="User Earn" value="<?php echo number_format($profile[0]['user_earn'],0,',','.'); ?>" autocomplete="off" maxlength="20" required>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="spent" name="spent" placeholder="User Spent" value="<?php echo $profile[0]['user_spent'] ?>" autocomplete="off" maxlength="20" required>
+                <input type="text" class="form-control" id="spent" name="spent" placeholder="User Spent" value="<?php echo number_format($profile[0]['user_spent'],0,',','.'); ?>" autocomplete="off" maxlength="20" required>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="simpanan" name="simpanan" placeholder="Simpanan" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['simpanan'] ?>" required>
+                <input type="text" class="form-control" id="simpanan" name="simpanan" placeholder="Simpanan" autocomplete="off" maxlength="20" value="<?php echo number_format($profile[0]['simpanan'],0,',','.'); ?>" required>
               </div>
               <p class="text-center">
                 <button type="submit" id="save" name="save" class="btn btn-info btn-lg" onclick="return(submitlogin());"><i class="fa fa-save"></i> Save</button>
@@ -145,23 +151,19 @@
             </form>
 					</div>
           <script type="text/javascript">
-            /* function submitlogin() {
-              var form = document.register;
-              if (form.password.value != form.confirm_password.value) {
-                alert("Password did not match");
+            function submitlogin() {
+              var form = document.profile;
+              if (form.earn.value == 0) {
+                alert("User earn tidak boleh kosong");
+                return false;
+              } else if (form.spent.value == 0) {
+                alert("User spent tidak boleh kosong");
+                return false;
+              } else if (form.simpanan.value == 0) {
+                alert("Simpanan user tidak boleh kosong");
                 return false;
               }
             }
-            $('#password, #confirm_password').on('keyup', function () {
-              if ($('#password').val() == ""){
-                $('#message').html('Password can\'t be Empty').css('color', 'red');
-              } else if ($('#password').val() == $('#confirm_password').val()) {
-                $('#message').html('Matching').css('color', 'green');
-              }
-              else {
-                $('#message').html('Not Matching').css('color', 'red');
-              }
-            }); */
           </script>
 				</div>
 			</div>

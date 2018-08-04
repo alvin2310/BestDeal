@@ -55,6 +55,7 @@
               <nav class="menu menu--iris">
                 <ul class="nav navbar-nav menu__list">
                   <li class="menu__item menu__item--current"><a href="index.php" class="menu__link">Home</a></li>
+                  <li class="menu__item"><a href="./recommend.php" class="menu__link scroll">See Recommendation</a></li>
                   <li class="menu__item"><a href="./search.php" class="menu__link scroll">Search</a></li>
                   <li class="menu__item"><a href="./Drawing/index.php" class="menu__link scroll">Design</a></li>
                   <li class="dropdown menu__item">
@@ -76,7 +77,7 @@
 			<div class="gallery" id="gallery">
 				<div class="container">
 					<div class="wthree-tittle">
-							<h3 class="agile_title one">Recommended</h3>
+							<h3 class="agile_title one">Popular</h3>
 						<p class="w3l-agile-its-title">Properties</p>
 					</div>
 					<!-- Content List Data -->
@@ -84,7 +85,7 @@
 						<div role="tabpanel" class="tab-pane fade in active" id="home-main" aria-labelledby="home-tab">
 							<div class="w3_tab_img">
 								<?php
-									require_once 'moduleTrust.php';
+									/* require_once 'moduleTrust.php';
 												
 									$db = new Module();
 
@@ -95,13 +96,6 @@
 										$response["error"] = FALSE;
 										foreach ($user as $i => $value){
 											if(isset($value['rumah_id'])) {
-												/* $response[] = (object) array(
-													"rumah_id" => $value['rumah_id'],
-													"rumah_name" => $value['rumah_name'],
-													"ukuran" => $value['ukuran'],
-													"harga" => $value['harga'],
-													"rumah_photo" => isset($value['rumah_photo']) ? $value['rumah_photo'] : 'images/no_image.png'
-												); */
 												if(isset($value['rumah_photo']) AND $value['rumah_photo']<>""){
 													$path=$value['rumah_photo'];
 												}
@@ -124,10 +118,53 @@
 												</div>";
 											}
 										}
-									}
+                  } */
+                  $kns = new DB_con();
+                  $query = "SELECT A.*,
+                            CASE WHEN avgrating IS NULL THEN 0 ELSE avgrating END avgrating,
+                            CASE WHEN totalrating IS NULL THEN 0 ELSE totalrating END totalrating 
+                            FROM tbl_rumah A
+                            LEFT JOIN(SELECT rumah_id,SUM(rating)/COUNT(rating) avgrating,COUNT(rating) totalrating FROM tbl_rating 
+                            GROUP BY rumah_id) B ON A.rumah_id=B.rumah_id
+                            ORDER BY avgrating";
+                  $result = $kns->OpenCon()->query($query);
+                  while($data = $result->fetch_array(MYSQLI_ASSOC)){
+                    if(isset($data['rumah_photo']) AND $data['rumah_photo']<>""){
+                      $path=$data['rumah_photo'];
+                    }
+                    else{
+                      $path="images/no_image.png";
+                    }
+                    echo "
+                      <div class=\"col-sm-3 w3_tab_img_left\">
+                        <div class=\"demo\">
+                          <a class=\"cm-overlay\" href=\"$path\">
+                            <figure class=\"imghvr-shutter-in-out-diag-2\"><img src=\"$path\" alt=\" \" class=\"img-responsive\" />
+                            </figure>
+                          </a>
+                        </div>
+                        <div class=\"agile-gallery-info\">
+                          <h6>".$data['rumah_name']." ( <b>".$data['ukuran']."</b> )</h6>
+                          <h6>Rp.".number_format($data['harga'],2,",",".")."</h6>
+                        </div>
+                      </div>
+                    ";
+                  }
 								?>
 								<div class="clearfix"> </div>
-							</div>
+              </div>
+              <?php
+                /* $kns = new DB_con();
+                $query = "SELECT * FROM tbl_users
+                          WHERE user_id=".$_SESSION['user_id']." AND (user_earn=0 OR user_spent=0 OR simpanan=0)";
+                $result = $kns->OpenCon()->query($query);
+                if($result->num_rows==1){
+                  echo "
+                    <p>For a better Recommendation please fill your profile First !</p>
+                    <a href='./profile.php' class='btn btn-info btn-lg'>Go to Profile</a>
+                  ";
+                } */
+              ?>
 						</div>
 					</div>
 				</div>

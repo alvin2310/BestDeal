@@ -55,6 +55,7 @@
               <nav class="menu menu--iris">
                 <ul class="nav navbar-nav menu__list">
                   <li class="menu__item"><a href="../index.php" class="menu__link scroll">Home</a></li>
+                  <li class="menu__item"><a href="../recommend.php" class="menu__link scroll">See Recommendation</a></li>
                   <li class="menu__item"><a href="../search.php" class="menu__link scroll">Search</a></li>
                   <li class="menu__item menu__item--current"><a href="./index.php" class="menu__link">Design</a></li>
                   <li class="dropdown menu__item">

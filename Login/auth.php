@@ -38,4 +38,50 @@ class Auth{
     }
 }
 
+class User {
+    protected $db;
+    public function __construct(){
+        $this->db = new DB_con();
+        $this->db = $this->db->OpenCon();
+    }
+
+    public function saveProfile($userid,$password,$firstname,$lastname,$alamat,$kota,$provinsi,$email,$no_hp,$earn,$spent,$simpanan){
+        $pass = hash('sha256', $password);
+        if($password==""){
+            $query = "UPDATE tbl_users SET 
+                        first_name='$firstname',
+                        last_name='$lastname',
+                        alamat='$alamat',
+                        kota='$kota',
+                        provinsi='$provinsi',
+                        email='$email',
+                        no_telp='$no_hp',
+                        user_earn='$earn',
+                        user_spent='$spent',
+                        simpanan='$simpanan' WHERE user_id=$userid ";
+        } else {
+            $query = "UPDATE tbl_users SET 
+                        user_password='$pass',
+                        first_name='$firstname',
+                        last_name='$lastname',
+                        alamat='$alamat',
+                        kota='$kota',
+                        provinsi='$provinsi',
+                        email='$email',
+                        no_telp='$no_hp',
+                        user_earn='$earn',
+                        user_spent='$spent',
+                        simpanan='$simpanan' WHERE user_id=$userid ";
+        }
+
+        if($this->db->query($query)){
+            return true;
+        }
+        else{
+            return false;
+        }
+        //header('Location: ../index.php');
+    }
+
+}
 ?>

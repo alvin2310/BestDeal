@@ -55,8 +55,8 @@
               <nav class="menu menu--iris">
                 <ul class="nav navbar-nav menu__list">
                   <li class="menu__item"><a href="index.php" class="menu__link">Home</a></li>
-                  <li class="menu__item"><a href="./recommend.php" class="menu__link scroll">See Recommendation</a></li>
-                  <li class="menu__item menu__item--current"><a href="./search.php" class="menu__link scroll">Search</a></li>
+                  <li class="menu__item menu__item--current"><a href="./recommend.php" class="menu__link scroll">See Recommendation</a></li>
+                  <li class="menu__item"><a href="./search.php" class="menu__link scroll">Search</a></li>
                   <li class="menu__item"><a href="./Drawing/index.php" class="menu__link scroll">Design</a></li>
                   <li class="dropdown menu__item">
                     <a href="#" class="dropdown-toggle menu__link" data-toggle="dropdown"><?php echo $_SESSION['user_name']; ?><b class="caret"></b></a>
@@ -77,15 +77,63 @@
 			<div class="gallery" id="gallery">
 				<div class="container">
 					<div class="wthree-tittle">
-							<h3 class="agile_title one">Recommended</h3>
-						<p class="w3l-agile-its-title">Properties</p>
+							<h3 class="agile_title one">Recommendation</h3>
+						<p class="w3l-agile-its-title">Recommend</p>
 					</div>
 					<!-- Content List Data -->
 					<div id="myTabContent" class="tab-content">
-            <form>
-              <input class="form-control" placeholder="Keyword" />
-              <button class="btn btn-primary">Search</button>
-            </form>
+						<div role="tabpanel" class="tab-pane fade in active" id="home-main" aria-labelledby="home-tab">
+							<div class="w3_tab_img">
+								<?php
+									require_once 'moduleTrust.php';
+									$db = new Module();
+                  $kns = new DB_con();
+
+                  $userid = $_SESSION['user_id'];
+
+                  $query = "SELECT * FROM tbl_users
+                            WHERE user_id=$userid AND (user_earn=0 OR user_spent=0 OR simpanan=0)";
+                  $result = $kns->OpenCon()->query($query);
+                  if($result->num_rows==1){
+                    echo "
+                      <p>For a better Recommendation please fill your profile First !</p>
+                      <a href='./profile.php' class='btn btn-info btn-lg'>Go to Profile</a>
+                    ";
+                  } else {
+                    $user = $db->home($userid);
+                    if ($user != false) {
+                      $n = count($user);
+                      $response["error"] = FALSE;
+                      foreach ($user as $i => $value){
+                        if(isset($value['rumah_id'])) {
+                          if(isset($value['rumah_photo']) AND $value['rumah_photo']<>""){
+                            $path=$value['rumah_photo'];
+                          }
+                          else{
+                            $path="images/no_image.png";
+                          }
+  
+                          echo "
+                          <div class=\"col-sm-3 w3_tab_img_left\">
+                            <div class=\"demo\">
+                              <a class=\"cm-overlay\" href=\"$path\">
+                                <figure class=\"imghvr-shutter-in-out-diag-2\"><img src=\"$path\" alt=\" \" class=\"img-responsive\" />
+                                </figure>
+                              </a>
+                            </div>
+                            <div class=\"agile-gallery-info\">
+                              <h6>".$value['rumah_name']." ( <b>".$value['ukuran']."</b> )</h6>
+                              <h6>Rp.".number_format($value['harga'],2,",",".")."</h6>
+                            </div>
+                          </div>";
+                        }
+                      }
+                    }
+                  }
+								?>
+								<div class="clearfix"> </div>
+              </div>
+						</div>
 					</div>
 				</div>
 			</div>

@@ -46,7 +46,7 @@ class Module{
         }
       }
     //End Data
-
+    
     //Find X
       $X = array();
       for($i=0;$i<count($tblUser);$i++){
@@ -65,11 +65,12 @@ class Module{
       $F10 = ($Fx[1]-$Fx[0])/($X[1]-$X[0]);
       $F21 = ($Fx[2]-$Fx[1])/($X[2]-$X[1]);
       $F32 = ($Fx[3]-$Fx[2])/($X[3]-$X[2]);
-
+      //echo "$F10\n$F21\n$F32\n";
       $F210 = ((float)$F21-(float)$F10)/($X[2]-$X[0]);
       $F321 = ((float)$F32-(float)$F21)/($X[3]-$X[1]);
-
+      //echo "$F210\n$F321\n";
       $F3210 = ((float)$F321-(float)$F210)/($X[3]-$X[0]);
+      //echo "$F3210\n";
 
       $resultPrice = 
       (
@@ -81,6 +82,7 @@ class Module{
           $F3210 * (($thisUser[0]['selisih']-$X[0])*($thisUser[0]['selisih']-$X[1])*($thisUser[0]['selisih']-$X[2]))
         ) 
       ) * 5;
+      
     //End Harga
 
     //Tampilkan Daftar
