@@ -54,16 +54,16 @@
             <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
               <nav class="menu menu--iris">
                 <ul class="nav navbar-nav menu__list">
-                  <li class="menu__item"><a href="../index.php" class="menu__link scroll">Home</a></li>
-                  <li class="menu__item"><a href="../recommend.php" class="menu__link scroll">See Recommendation</a></li>
-                  <li class="menu__item"><a href="../search.php" class="menu__link scroll">Search</a></li>
-                  <li class="menu__item menu__item--current"><a href="./index.php" class="menu__link">Design</a></li>
+                  <li class="menu__item"><a href="index.php" class="menu__link">Awal</a></li>
+                  <li class="menu__item"><a href="./recommend.php" class="menu__link scroll">List Rekomendasi</a></li>
+                  <li class="menu__item"><a href="./search.php" class="menu__link scroll">Cari</a></li>
+                  <li class="menu__item menu__item--current"><a href="./Drawing/index.php" class="menu__link scroll">Rancang</a></li>
                   <li class="dropdown menu__item">
                     <a href="#" class="dropdown-toggle menu__link" data-toggle="dropdown"><?php echo $_SESSION['user_name']; ?><b class="caret"></b></a>
                     <ul class="dropdown-menu agile_short_dropdown">
-                      <li><a class="scroll" href="../profile.php">Profile</a></li>
+                      <li><a class="scroll" href="../profile.php">Profil</a></li>
                       <!-- <li><a class="scroll" href="#">Settings</a></li> -->
-                      <li><a class="scroll" href="../Login/logout.php">Logout</a></li>
+                      <li><a class="scroll" href="./Login/logout.php">Keluar</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -75,6 +75,10 @@
     </div>
     <div class="gallery" id="design">
       <div class="container">
+        <div class="wthree-tittle">
+            <h3 class="agile_title one">Rancang</h3>
+          <p class="w3l-agile-its-title">Rancang rumah anda</p>
+        </div>
         <?php
         include("create.php");
         ?>

@@ -10,7 +10,7 @@
   
   if (isset($_POST['save'])) {
     extract($_POST);
-    $profile = $user->saveProfile($_SESSION['user_id'],$password,$firstname,$lasttname,$alamat,$kota,$provinsi,$email,$no_hp,$earn,$spent,$simpanan);
+    $profile = $user->saveProfile($_SESSION['user_id'],$password,$firstname,$lasttname,$alamat,$kota,$provinsi,$email,$no_hp,str_replace(".","",$earn),str_replace(".","",$spent),str_replace(".","",$simpanan));
 		if ($profile) {
         echo "<script type='text/javascript'>
           alert('Profile Save Successfully !');
@@ -70,16 +70,16 @@
             <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
               <nav class="menu menu--iris">
                 <ul class="nav navbar-nav menu__list">
-                  <li class="menu__item"><a href="index.php" class="menu__link">Home</a></li>
-                  <li class="menu__item"><a href="./recommend.php" class="menu__link scroll">See Recommendation</a></li>
-                  <li class="menu__item"><a href="./search.php" class="menu__link scroll">Search</a></li>
-                  <li class="menu__item"><a href="./Drawing/index.php" class="menu__link scroll">Design</a></li>
+                  <li class="menu__item"><a href="index.php" class="menu__link">Awal</a></li>
+                  <li class="menu__item"><a href="./recommend.php" class="menu__link scroll">List Rekomendasi</a></li>
+                  <li class="menu__item"><a href="./search.php" class="menu__link scroll">Cari</a></li>
+                  <li class="menu__item"><a href="./Drawing/index.php" class="menu__link scroll">Rancang</a></li>
                   <li class="dropdown menu__item menu__item--current">
                     <a href="#" class="dropdown-toggle menu__link" data-toggle="dropdown"><?php echo $_SESSION['user_name']; ?><b class="caret"></b></a>
                     <ul class="dropdown-menu agile_short_dropdown">
-                      <li><a class="scroll" href="./profile.php">Profile</a></li>
+                      <li><a class="scroll" href="./profile.php">Profil</a></li>
                       <!-- <li><a class="scroll" href="#">Settings</a></li> -->
-                      <li><a class="scroll" href="./Login/logout.php">Logout</a></li>
+                      <li><a class="scroll" href="./Login/logout.php">Keluar</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -134,7 +134,7 @@
                 <input type="email" class="form-control" id="email" name="email" placeholder="Email" autocomplete="off" value="<?php echo $profile[0]['email']; ?>" required>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder="No Hp" minlength="10" maxlength="12" value="<?php echo $profile[0]['no_telp']; ?>" required>
+                <input type="number" class="form-control" id="no_hp" name="no_hp" placeholder="No Hp" minlength="10" maxlength="12" value="<?php echo $profile[0]['no_telp']; ?>" required>
               </div>
               <div class="form-group">
                 <input type="text" class="form-control" id="earn" name="earn" placeholder="User Earn" value="<?php echo number_format($profile[0]['user_earn'],0,',','.'); ?>" autocomplete="off" maxlength="20" required>

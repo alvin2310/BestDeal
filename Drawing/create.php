@@ -45,13 +45,13 @@
       $( "#dropzone" ).droppable({
         accept: ".tool-master",
         drop: function( event, ui ) {
-          $(this).html("");
+          //$(this).html("");
           var $item = ui.draggable.clone();
           $item.attr("id","item-draggable");
           $item.removeClass("ui-draggable ui-draggable-handle tool-master");
           $item.addClass("item-child");
-          $item.appendTo($(this));
-          //$(this).append($item);
+          //$item.appendTo($(this));
+          $(this).append($item);
         }
       });
     });
