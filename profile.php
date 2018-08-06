@@ -110,39 +110,51 @@
 					<div id="myTabContent" class="tab-content">
             <form method="post" name="profile">
               <div class="form-group">
+                <label class="control-label">Username</label>
                 <input type="text" class="form-control" id="user_modal" name="username" placeholder="username" autocomplete="off" maxlength="20" readonly value="<?php echo $profile[0]['user_name']; ?>">
               </div>
               <div class="form-group">
+                <label class="control-label">First Name</label>
                 <input type="text" class="form-control" id="first_modal" name="firstname" placeholder="First Name" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['first_name']; ?>" required>
               </div>
               <div class="form-group">
+                <label class="control-label">Last Name</label>
                 <input type="text" class="form-control" id="last_modal" name="lastname" placeholder="Last Name" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['last_name']; ?>">
               </div>
               <div class="form-group">
+                <label class="control-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="password" maxlength="16">
               </div>
               <div class="form-group">
+                <label class="control-label">Alamat</label>
                 <textarea class="form-control" id="alamat" name="alamat" rows="5" required><?php echo $profile[0]['alamat']; ?></textarea>
               </div>
               <div class="form-group">
+                <label class="control-label">Kota</label>
                 <input type="text" class="form-control" id="kota" name="kota" placeholder="Kota" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['kota']; ?>" required>
               </div>
               <div class="form-group">
+                <label class="control-label">Provinsi</label>
                 <input type="text" class="form-control" id="provinsi" name="provinsi" placeholder="Provinsi" autocomplete="off" maxlength="20" value="<?php echo $profile[0]['provinsi']; ?>" required>
               </div>
               <div class="form-group">
+                <label class="control-label">Email</label>
                 <input type="email" class="form-control" id="email" name="email" placeholder="Email" autocomplete="off" value="<?php echo $profile[0]['email']; ?>" required>
               </div>
               <div class="form-group">
+                <label class="control-label">No Hp</label>
                 <input type="number" class="form-control" id="no_hp" name="no_hp" placeholder="No Hp" minlength="10" maxlength="12" value="<?php echo $profile[0]['no_telp']; ?>" required>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="earn" name="earn" placeholder="User Earn" value="<?php echo number_format($profile[0]['user_earn'],0,',','.'); ?>" autocomplete="off" maxlength="20" required>
+                <label class="control-label">Pendapatan</label>
+                <input type="text" class="form-control" id="earn" name="earn" placeholder="Pendapatan" value="<?php echo number_format($profile[0]['user_earn'],0,',','.'); ?>" autocomplete="off" maxlength="20" required>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="spent" name="spent" placeholder="User Spent" value="<?php echo number_format($profile[0]['user_spent'],0,',','.'); ?>" autocomplete="off" maxlength="20" required>
+                <label class="control-label">Pengeluaran</label>
+                <input type="text" class="form-control" id="spent" name="spent" placeholder="Pengeluaran" value="<?php echo number_format($profile[0]['user_spent'],0,',','.'); ?>" autocomplete="off" maxlength="20" required>
               </div>
               <div class="form-group">
+                <label class="control-label">Simpanan</label>
                 <input type="text" class="form-control" id="simpanan" name="simpanan" placeholder="Simpanan" autocomplete="off" maxlength="20" value="<?php echo number_format($profile[0]['simpanan'],0,',','.'); ?>" required>
               </div>
               <p class="text-center">

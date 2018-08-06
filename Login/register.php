@@ -136,31 +136,40 @@
 							<div class="w3_tab_img">
                 <form method="post" name="register">
                   <div class="form-group">
+                    <label class="control-label">Username</label>
                     <input type="text" class="form-control" id="user_modal" name="username" placeholder="username" autocomplete="off" maxlength="20" required>
                   </div>
                   <div class="form-group">
+                    <label class="control-label">First Name</label>
                     <input type="text" class="form-control" id="first_modal" name="firstname" placeholder="First Name" autocomplete="off" maxlength="20" required>
                   </div>
                   <div class="form-group">
+                    <label class="control-label">Password</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="password" maxlength="16" required>
                   </div>
                   <div class="form-group">
+                    <label class="control-label">Confirm Password</label>
                     <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="confirm password" maxlength="16" required>
                     <span id='message'></span>
                   </div>
                   <div class="form-group">
+                    <label class="control-label">Alamat</label>
                     <textarea class="form-control" id="alamat" name="alamat" rows="5" required></textarea>
                   </div>
                   <div class="form-group">
+                    <label class="control-label">Kota</label>
                     <input type="text" class="form-control" id="kota" name="kota" placeholder="Kota" autocomplete="off" maxlength="20" required>
                   </div>
                   <div class="form-group">
+                    <label class="control-label">Provinsi</label>
                     <input type="text" class="form-control" id="provinsi" name="provinsi" placeholder="Provinsi" autocomplete="off" maxlength="20" required>
                   </div>
                   <div class="form-group">
+                    <label class="control-label">Email</label>
                     <input type="email" class="form-control" id="email" name="email" placeholder="Email" autocomplete="off" required>
                   </div>
                   <div class="form-group">
+                    <label class="control-label">No Hp</label>
                     <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder="No Hp" minlength="10" maxlength="12" required>
                   </div>
                   <!-- <div class="form-group">
