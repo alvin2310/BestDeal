@@ -18,7 +18,7 @@ if(!empty($_POST['postID'])){
             CASE WHEN bata_qty IS NULL THEN 0 ELSE bata_qty END bata,
             CASE WHEN semen_qty IS NULL THEN 0 ELSE semen_qty END semen,
             CASE WHEN kayu_qty IS NULL THEN 0 ELSE kayu_qty END kayu,
-            CASE WHEN pasir_qty IS NULL THEN 0 ELSE pasir_qty END pasir,
+            CASE WHEN pasir_qty IS NULL THEN 0 ELSE FORMAT(pasir_qty,2) END pasir,
             CASE WHEN beton_qty IS NULL THEN 0 ELSE beton_qty END beton,
             CASE WHEN triplek_qty IS NULL THEN 0 ELSE triplek_qty END triplek,
             CASE WHEN asbes_qty IS NULL THEN 0 ELSE asbes_qty END asbes,

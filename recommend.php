@@ -189,20 +189,28 @@
                       } else if(lama > 10 && lama < 15) {
                         lama = 15;
                       }
+                      var bata = data.bata;
+                      var semen = data.bata;
+                      var kayu = data.bata;
+                      var pasir = data.bata;
+                      var beton = data.bata;
+                      var triplek = data.bata;
+                      var asbes = data.bata;
+                      var cat = data.bata;
                       $('#rumah_name').html("<h4>"+data.rumah_name+"</h4>");
                       $('#rating_star').attr('data-postID',data.rumah_id);
                       $('#alamat').text(data.alamat);
                       $('#min_dp').text(dp.toLocaleString('it-IT', {style: 'currency', currency: 'IDR'}));
                       $('#lama_kpr').text(lama+" Tahun");
                       $('#deskripsi').text(data.rumah_description);
-                      $('#bata').text(data.bata);
-                      $('#semen').text(data.semen);
-                      $('#kayu').text(data.kayu);
-                      $('#pasir').text(data.pasir);
-                      $('#beton').text(data.beton);
-                      $('#triplek').text(data.triplek);
-                      $('#asbes').text(data.asbes);
-                      $('#cat').text(data.cat);
+                      $('#bata').text(data.bata + " buah");
+                      $('#semen').text(data.semen + " sak");
+                      $('#kayu').text(data.kayu + " buah");
+                      $('#pasir').text(data.pasir + " m3");
+                      $('#beton').text(data.beton + " buah");
+                      $('#triplek').text(data.triplek + " buah");
+                      $('#asbes').text(data.asbes + " buah");
+                      $('#cat').text(data.cat + " kaleng");
                       $('#avgrat').text(data.avgrating);
                       $('#totalrat').text(data.totalrating);
                     }else{
