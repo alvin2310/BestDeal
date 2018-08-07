@@ -35,6 +35,30 @@
         setTimeout(titleMarquee, 100);
       })();
     </script>
+    <!-- Rating System -->
+      <link href="css/rating.css" rel="stylesheet" type="text/css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+      <script type="text/javascript" src="js/rating.js"></script>
+      <script language="javascript" type="text/javascript">
+      function processRating(val, attrVal){
+        $.ajax({
+            type: 'POST',
+            url: 'rating.php',
+            data: 'postID='+attrVal+'&ratingPoints='+val,
+            dataType: 'json',
+            success : function(data) {
+                if (data.status == 'ok') {
+                    $('#avgrat').text(data.avgrating);
+                    $('#totalrat').text(data.totalrating);
+                }else{
+                    alert('Some problem occured, please try again.');
+                }
+            }
+        });
+      }
+      </script>
+    <!-- End Rating -->
+	  <link rel="canonical" href="js/accounting.js/" />
   </head>
   <body>
     <div class="banner-top">
@@ -117,11 +141,11 @@
                           <div class=\"col-sm-3 w3_tab_img_left\">
                             <div class=\"demo\">
                               <a class=\"cm-overlay\" href=\"$path\">
-                                <figure class=\"imghvr-shutter-in-out-diag-2\"><img src=\"$path\" alt=\" \" class=\"img-responsive\" />
+                                <figure class=\"imghvr-shutter-in-out-diag-2\"><img src=\"$path\" alt=\" \" class=\"img-responsive\"  height='229' />
                                 </figure>
                               </a>
                             </div>
-                            <div class=\"agile-gallery-info\">
+                            <div class=\"agile-gallery-info\" style='cursor:pointer;' id=\"open-View\" data-toggle=\"modal\" data-id=\"".$value['rumah_id']."\">
                               <h6>".$value['rumah_name']." ( <b>".$value['ukuran']."</b> )</h6>
                               <h6>Rp.".number_format($value['harga'],2,",",".")."</h6>
                             </div>
@@ -134,11 +158,163 @@
 								<div class="clearfix"> </div>
               </div>
 						</div>
-					</div>
+            <script>
+              $(document).on("click", "#open-View", function () {
+                var userid = <?php echo $_SESSION['user_id']; ?>;
+                //remove Old Widget
+                $('.rating_widget').remove();
+                $('.clear-fix').remove();
+                //Add New Widget
+                $("#rating_star").rating_widget({
+                    starLength: '5',
+                    initialValue: '',
+                    callbackFunctionName: 'processRating',
+                    imageDirectory: 'images/',
+                    inputAttr: 'data-postID'
+                });
+                var viewId = $(this).data('id');
+                $.ajax({
+                  type: 'POST',
+                  url: 'rating.php',
+                  data: 'postID='+viewId+'&userID='+userid,
+                  dataType: 'json',
+                  success : function(data) {
+                    if (data.status == 'ok') {
+                      var dp = data.harga * 20 / 100;
+                      var pct = "12%"; // or from an <input> field or whatever
+                      pct = parseFloat(pct) / 100;
+                      pct = (data.harga - dp) * pct;
+                      var lama = Math.ceil(( ((data.harga - dp) + pct) / data.selisih) / 12);
+                      if(lama > 5 && lama < 10) {
+                        lama = 10;
+                      } else if(lama > 10 && lama < 15) {
+                        lama = 15;
+                      }
+                      $('#rumah_name').html("<h4>"+data.rumah_name+"</h4>");
+                      $('#rating_star').attr('data-postID',data.rumah_id);
+                      $('#alamat').text(data.alamat);
+                      $('#min_dp').text(dp.toLocaleString('it-IT', {style: 'currency', currency: 'IDR'}));
+                      $('#lama_kpr').text(lama+" Tahun");
+                      $('#deskripsi').text(data.rumah_description);
+                      $('#bata').text(data.bata);
+                      $('#semen').text(data.semen);
+                      $('#kayu').text(data.kayu);
+                      $('#pasir').text(data.pasir);
+                      $('#beton').text(data.beton);
+                      $('#triplek').text(data.triplek);
+                      $('#asbes').text(data.asbes);
+                      $('#cat').text(data.cat);
+                      $('#avgrat').text(data.avgrating);
+                      $('#totalrat').text(data.totalrating);
+                    }else{
+                      alert('Some problem occured, please try again.');
+                    }
+                  }
+                });
+                /* $(".modal-footer #rating_start").postID(viewId); */
+                $('#view-modal').modal('show');
+              });
+            </script>
+          </div>
 				</div>
 			</div>
-		<!-- //gallery -->
-    <script src="js/jquery-2.2.3.min.js"></script>
+    <!-- //gallery -->
+    
+    <!-- View Modal -->
+      <div class="modal fade" id="view-modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Rumah</h4>
+              <p id="rumah_name"></p>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+              <div class="form-group">
+                <label>Alamat</label>
+                <p id="alamat"></p>
+              </div>
+              <div class="form-group">
+                <label>Min. DP</label>
+                <p id="min_dp"></p>
+              </div>
+              <div class="form-group">
+                <label>Lama KPR</label>
+                <p id="lama_kpr"></p>
+              </div>
+              <div class="form-group">
+                <label>Rating</label>
+                <div style="font-size: 14px;margin-top: 5px;color: #8e8d8d;">(Average Rating <span id="avgrat"></span> Based on <span id="totalrat"></span> rating)</span></div>
+              </div>
+              <div class="form-group">
+                <label>Deskripsi</label>
+                <p id="deskripsi"></p>
+              </div>
+              <div class="form-group">
+                <label>Daftar Bahan Bangunan : </label>
+                <hr>
+                <label>Bata</label>
+                <p id="bata"></p>
+                <label>Semen</label>
+                <p id="semen"></p>
+                <label>Kayu</label>
+                <p id="kayu"></p>
+                <label>Pasir</label>
+                <p id="pasir"></p>
+                <label>Beton</label>
+                <p id="beton"></p>
+                <label>Triplek</label>
+                <p id="triplek"></p>
+                <label>Asbes</label>
+                <p id="asbes"></p>
+                <label>Cat</label>
+                <p id="cat"></p>
+              </div>
+              <!-- <div class="form-group">
+                <label>Post Comment</label>
+                <input type="text" class="form-control" nama="comments" id="comments" value="" />
+                <a href="javascript:void(0)" class="btn btn-success" name="send" id="send">Send</a>
+                <i><label id="message"></label><i>
+              </div> -->
+              <div class="form-group">
+              </div>
+            </div>
+          
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <input name="rating" value="0" id="rating_star" type="hidden" data-postID="0" />
+            </div>
+          
+          </div>
+
+          <script language="javascript" type="text/javascript">
+            /* $("#send").click(function() {
+              var val = $("#comments").val();
+              var attrVal = $('#open-View').attr("data-id");
+              $.ajax({
+                  type: 'POST',
+                  url: 'comment.php',
+                  data: 'postID='+attrVal+'&comment='+val,
+                  dataType: 'json',
+                  success : function(data) {
+                      if (data.status == 'ok') {
+                        $("#comments").val("");
+                        $("#message").empty();
+                        $("#message").append("Comment post successfully");
+                      }else{
+                          alert('Some problem occured, please try again.');
+                      }
+                  }
+              });
+            }); */
+          </script>
+        </div>
+      </div>
+    <!-- End View Modal -->
+    <!-- <script src="js/jquery-2.2.3.min.js"></script> -->
     <!-- Stats-Number-Scroller-Animation-JavaScript -->
       <script src="js/waypoints.min.js"></script> 
       <script src="js/counterup.min.js"></script> 

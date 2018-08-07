@@ -196,7 +196,7 @@
 												<div class=\"col-sm-3 w3_tab_img_left\">
 													<div class=\"demo\">
 														<a class=\"cm-overlay\" href=\"$path\">
-															<figure class=\"imghvr-shutter-in-out-diag-2\"><img src=\"$path\" alt=\" \" class=\"img-responsive\" />
+															<figure class=\"imghvr-shutter-in-out-diag-2\"><img src=\"$path\" alt=\" \" class=\"img-responsive\" height='229' />
 															</figure>
 														</a>
 													</div>

@@ -81,8 +81,9 @@ class Module{
         ) + (
           $F3210 * (($thisUser[0]['selisih']-$X[0])*($thisUser[0]['selisih']-$X[1])*($thisUser[0]['selisih']-$X[2]))
         ) 
-      ) * 5;
+      );
       
+      //echo number_format($resultPrice,0,',','.');
     //End Harga
 
     //Tampilkan Daftar
@@ -93,7 +94,7 @@ class Module{
                 FROM tbl_rumah A
                 LEFT JOIN(SELECT rumah_id,SUM(rating)/COUNT(rating) avgrating,COUNT(rating) totalrating FROM tbl_rating 
                 GROUP BY rumah_id) B ON A.rumah_id=B.rumah_id
-                WHERE harga<='$resultPrice' ORDER BY avgrating";
+                WHERE (harga * 20 / 100)<='$resultPrice' ORDER BY avgrating";
       //echo $query;
       $hasil = $kns->OpenCon()->query($query);
       if(mysqli_num_rows($hasil)<1){

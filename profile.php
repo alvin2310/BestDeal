@@ -147,15 +147,15 @@
               </div>
               <div class="form-group">
                 <label class="control-label">Pendapatan</label>
-                <input type="text" class="form-control" id="earn" name="earn" placeholder="Pendapatan" value="<?php echo number_format($profile[0]['user_earn'],0,',','.'); ?>" autocomplete="off" maxlength="20" required>
+                <input type="number" class="form-control" id="earn" name="earn" placeholder="Pendapatan" value="<?php echo number_format($profile[0]['user_earn'],0,',','.'); ?>" autocomplete="off" maxlength="20" required>
               </div>
               <div class="form-group">
                 <label class="control-label">Pengeluaran</label>
-                <input type="text" class="form-control" id="spent" name="spent" placeholder="Pengeluaran" value="<?php echo number_format($profile[0]['user_spent'],0,',','.'); ?>" autocomplete="off" maxlength="20" required>
+                <input type="number" class="form-control" id="spent" name="spent" placeholder="Pengeluaran" value="<?php echo number_format($profile[0]['user_spent'],0,',','.'); ?>" autocomplete="off" maxlength="20" required>
               </div>
               <div class="form-group">
                 <label class="control-label">Simpanan</label>
-                <input type="text" class="form-control" id="simpanan" name="simpanan" placeholder="Simpanan" autocomplete="off" maxlength="20" value="<?php echo number_format($profile[0]['simpanan'],0,',','.'); ?>" required>
+                <input type="number" class="form-control" id="simpanan" name="simpanan" placeholder="Simpanan" autocomplete="off" maxlength="20" value="<?php echo number_format($profile[0]['simpanan'],0,',','.'); ?>" required>
               </div>
               <p class="text-center">
                 <button type="submit" id="save" name="save" class="btn btn-info btn-lg" onclick="return(submitlogin());"><i class="fa fa-save"></i> Save</button>

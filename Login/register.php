@@ -170,7 +170,7 @@
                   </div>
                   <div class="form-group">
                     <label class="control-label">No Hp</label>
-                    <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder="No Hp" minlength="10" maxlength="12" required>
+                    <input type="number" class="form-control" id="no_hp" name="no_hp" placeholder="No Hp" minlength="10" maxlength="12" required>
                   </div>
                   <!-- <div class="form-group">
                     <input type="number" class="form-control" id="earn" name="earn" placeholder="User Earn" autocomplete="off" maxlength="20" required>

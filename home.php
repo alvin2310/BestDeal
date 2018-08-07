@@ -85,40 +85,6 @@
 						<div role="tabpanel" class="tab-pane fade in active" id="home-main" aria-labelledby="home-tab">
 							<div class="w3_tab_img">
 								<?php
-									/* require_once 'moduleTrust.php';
-												
-									$db = new Module();
-
-									$userid = $_SESSION['user_id'];
-									$user = $db->home($userid);
-									if ($user != false) {
-										$n = count($user);
-										$response["error"] = FALSE;
-										foreach ($user as $i => $value){
-											if(isset($value['rumah_id'])) {
-												if(isset($value['rumah_photo']) AND $value['rumah_photo']<>""){
-													$path=$value['rumah_photo'];
-												}
-												else{
-													$path="images/no_image.png";
-												}
-
-												echo "
-												<div class=\"col-sm-3 w3_tab_img_left\">
-													<div class=\"demo\">
-														<a class=\"cm-overlay\" href=\"$path\">
-															<figure class=\"imghvr-shutter-in-out-diag-2\"><img src=\"$path\" alt=\" \" class=\"img-responsive\" />
-															</figure>
-														</a>
-													</div>
-													<div class=\"agile-gallery-info\">
-														<h6>".$value['rumah_name']." ( <b>".$value['ukuran']."</b> )</h6>
-														<h6>Rp.".number_format($value['harga'],2,",",".")."</h6>
-													</div>
-												</div>";
-											}
-										}
-                  } */
                   $kns = new DB_con();
                   $query = "SELECT A.*,
                             CASE WHEN avgrating IS NULL THEN 0 ELSE avgrating END avgrating,
@@ -139,7 +105,7 @@
                       <div class=\"col-sm-3 w3_tab_img_left\">
                         <div class=\"demo\">
                           <a class=\"cm-overlay\" href=\"$path\">
-                            <figure class=\"imghvr-shutter-in-out-diag-2\"><img src=\"$path\" alt=\" \" class=\"img-responsive\" />
+                            <figure class=\"imghvr-shutter-in-out-diag-2\"><img src=\"$path\" alt=\" \" class=\"img-responsive\" height='229' />
                             </figure>
                           </a>
                         </div>
