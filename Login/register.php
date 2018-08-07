@@ -145,11 +145,11 @@
                   </div>
                   <div class="form-group">
                     <label class="control-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="password" maxlength="16" required>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="password" minlength="3" maxlength="16" required>
                   </div>
                   <div class="form-group">
                     <label class="control-label">Confirm Password</label>
-                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="confirm password" maxlength="16" required>
+                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="confirm password" minlength="3" maxlength="16" required>
                     <span id='message'></span>
                   </div>
                   <div class="form-group">
@@ -170,7 +170,7 @@
                   </div>
                   <div class="form-group">
                     <label class="control-label">No Hp</label>
-                    <input type="number" class="form-control" id="no_hp" name="no_hp" placeholder="No Hp" minlength="10" maxlength="12" required>
+                    <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder="No Hp" minlength="10" maxlength="12" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" required>
                   </div>
                   <!-- <div class="form-group">
                     <input type="number" class="form-control" id="earn" name="earn" placeholder="User Earn" autocomplete="off" maxlength="20" required>
@@ -204,6 +204,61 @@
                     $('#message').html('Not Matching').css('color', 'red');
                   }
                 });
+                function fun_AllowOnlyAmountAndDot(txt)
+                {
+                  if(event.keyCode > 47 && event.keyCode < 58 || event.keyCode == 46)
+                  {
+                    var txtbx=document.getElementById(txt);
+                    var amount = document.getElementById(txt).value;
+                    var present=0;
+                    var count=0;
+
+                    if(amount.indexOf(".",present)||amount.indexOf(".",present+1));
+                    {
+                      // alert('0');
+                    }
+                    do
+                    {
+                    present=amount.indexOf(".",present);
+                    if(present!=-1)
+                      {
+                      count++;
+                      present++;
+                      }
+                    }
+                    while(present!=-1);
+                    if(present==-1 && amount.length==0 && event.keyCode == 46)
+                    {
+                      event.keyCode=0;
+                      //alert("Wrong position of decimal point not  allowed !!");
+                      return false;
+                    }
+
+                    if(count>=1 && event.keyCode == 46)
+                    {
+                      event.keyCode=0;
+                      //alert("Only one decimal point is allowed !!");
+                      return false;
+                    }
+                    if(count==1)
+                    {
+                      var lastdigits=amount.substring(amount.indexOf(".")+1,amount.length);
+                      if(lastdigits.length>=2)
+                      {
+                        //alert("Two decimal places only allowed");
+                        event.keyCode=0;
+                        return false;
+                      }
+                    }
+                    return true;
+                  }
+                  else
+                  {
+                    event.keyCode=0;
+                    //alert("Only Numbers with dot allowed !!");
+                    return false;
+                  }
+                }
               </script>
 						</div>
 					</div>
