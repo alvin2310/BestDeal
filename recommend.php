@@ -58,7 +58,6 @@
       }
       </script>
     <!-- End Rating -->
-	  <link rel="canonical" href="js/accounting.js/" />
   </head>
   <body>
     <div class="banner-top">

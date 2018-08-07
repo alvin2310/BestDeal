@@ -10,7 +10,7 @@
   
   if (isset($_POST['save'])) {
     extract($_POST);
-    $profile = $user->saveProfile($_SESSION['user_id'],$password,$firstname,$lasttname,$alamat,$kota,$provinsi,$email,$no_hp,str_replace(".","",$earn),str_replace(".","",$spent),str_replace(".","",$simpanan));
+    $profile = $user->saveProfile($_SESSION['user_id'],$password,$firstname,$lastname,$alamat,$kota,$provinsi,$email,$no_hp,str_replace(".","",$earn),str_replace(".","",$spent),str_replace(".","",$simpanan));
 		if ($profile) {
         echo "<script type='text/javascript'>
           alert('Profile Save Successfully !');
@@ -143,19 +143,19 @@
               </div>
               <div class="form-group">
                 <label class="control-label">No Hp</label>
-                <input type="number" class="form-control" id="no_hp" name="no_hp" placeholder="No Hp" minlength="10" maxlength="12" value="<?php echo $profile[0]['no_telp']; ?>" required>
+                <input type="text" class="form-control" id="no_hp" name="no_hp" pattern="\d*" placeholder="No Hp" minlength="10" maxlength="12" value="<?php echo $profile[0]['no_telp']; ?>" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" required>
               </div>
               <div class="form-group">
                 <label class="control-label">Pendapatan</label>
-                <input type="number" class="form-control" id="earn" name="earn" placeholder="Pendapatan" value="<?php echo number_format($profile[0]['user_earn'],0,',','.'); ?>" autocomplete="off" maxlength="20" required>
+                <input type="text" class="form-control" id="earn" name="earn" placeholder="Pendapatan" value="<?php echo number_format($profile[0]['user_earn'],0,',','.'); ?>" autocomplete="off" maxlength="20" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" required>
               </div>
               <div class="form-group">
                 <label class="control-label">Pengeluaran</label>
-                <input type="number" class="form-control" id="spent" name="spent" placeholder="Pengeluaran" value="<?php echo number_format($profile[0]['user_spent'],0,',','.'); ?>" autocomplete="off" maxlength="20" required>
+                <input type="text" class="form-control" id="spent" name="spent" placeholder="Pengeluaran" value="<?php echo number_format($profile[0]['user_spent'],0,',','.'); ?>" autocomplete="off" maxlength="20" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" required>
               </div>
               <div class="form-group">
                 <label class="control-label">Simpanan</label>
-                <input type="number" class="form-control" id="simpanan" name="simpanan" placeholder="Simpanan" autocomplete="off" maxlength="20" value="<?php echo number_format($profile[0]['simpanan'],0,',','.'); ?>" required>
+                <input type="text" class="form-control" id="simpanan" name="simpanan" placeholder="Simpanan" autocomplete="off" maxlength="20" value="<?php echo number_format($profile[0]['simpanan'],0,',','.'); ?>" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" required>
               </div>
               <p class="text-center">
                 <button type="submit" id="save" name="save" class="btn btn-info btn-lg" onclick="return(submitlogin());"><i class="fa fa-save"></i> Save</button>
@@ -173,6 +173,61 @@
                 return false;
               } else if (form.simpanan.value == 0) {
                 alert("Simpanan user tidak boleh kosong");
+                return false;
+              }
+            }
+            function fun_AllowOnlyAmountAndDot(txt)
+            {
+              if(event.keyCode > 47 && event.keyCode < 58 || event.keyCode == 46)
+              {
+                var txtbx=document.getElementById(txt);
+                var amount = document.getElementById(txt).value;
+                var present=0;
+                var count=0;
+
+                if(amount.indexOf(".",present)||amount.indexOf(".",present+1));
+                {
+                  // alert('0');
+                }
+                do
+                {
+                present=amount.indexOf(".",present);
+                if(present!=-1)
+                  {
+                  count++;
+                  present++;
+                  }
+                }
+                while(present!=-1);
+                if(present==-1 && amount.length==0 && event.keyCode == 46)
+                {
+                  event.keyCode=0;
+                  //alert("Wrong position of decimal point not  allowed !!");
+                  return false;
+                }
+
+                if(count>=1 && event.keyCode == 46)
+                {
+                  event.keyCode=0;
+                  //alert("Only one decimal point is allowed !!");
+                  return false;
+                }
+                if(count==1)
+                {
+                  var lastdigits=amount.substring(amount.indexOf(".")+1,amount.length);
+                  if(lastdigits.length>=2)
+                  {
+                    //alert("Two decimal places only allowed");
+                    event.keyCode=0;
+                    return false;
+                  }
+                }
+                return true;
+              }
+              else
+              {
+                event.keyCode=0;
+                //alert("Only Numbers with dot allowed !!");
                 return false;
               }
             }
