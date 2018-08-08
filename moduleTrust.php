@@ -31,10 +31,11 @@ class Module{
         $query = "SELECT *
                   FROM tbl_users A
                   WHERE A.user_id<>$user_id
-                  AND (user_earn-user_spent)>(".$thisUser[0]['selisih'].")
+                  AND ((user_earn-user_spent)>".$thisUser[0]['selisih']."
+                  OR simpanan>".$thisUser[0]['selisih'].")
                   AND A.user_earn<>0 AND A.user_spent<>0
                   LIMIT 4";
-        //echo $query;
+        echo $query;
         $hasil = $kns->OpenCon()->query($query);
         if(mysqli_num_rows($hasil)<1){
           echo "Tidak ada Data Hasil";

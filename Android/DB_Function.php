@@ -178,4 +178,48 @@
       }
     }
   }
+
+class Profile{
+  private $conn;
+    
+  // constructor
+  function __construct() {
+    require_once '../config.php';
+    // koneksi ke database
+    $db = new Db_con();
+    $this->conn = $db->OpenCon();
+  }
+
+  public function loadProfile($user_id){
+    $query="SELECT * FROM tbl_users
+            WHERE user_id=$user_id";
+    //echo $query;
+    $stmt = $this->conn->prepare($query);
+    if ($stmt->execute()) {
+        $user = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $user;
+    } else {
+        return NULL;
+    }
+  }
+
+  public function saveProfile($user_id,$firstname,$lastname,$gender,$age,$country,$city,$hcolor,$hlength,$htype,$ecolor,$ewear,$height,$weight,$btype,$bart,$appearance,$fhair,$drink,$smoke,$occupation,$employment,$home,$living,$nationality,$religion,$chinese_sign){
+    if($password==""){
+
+    } else {
+      $pass = hash('sha256', $password);
+    }
+    $query="CALL usp_fms_Profile_SV($user_id,'$firstname','$lastname','$gender',$age,$country,$city,$hcolor,$hlength,$htype,$ecolor,$ewear,$height,$weight,$btype,$bart,$appearance,$fhair,$drink,$smoke,$occupation,$employment,$home,$living,$nationality,$religion,$chinese_sign)";
+    //echo $query;
+    $stmt = $this->conn->prepare($query);
+    //$stmt->bind_param("sss", $user_id,$user_to,$cond);
+    if ($stmt->execute()) {
+        $stmt->close();
+        return true;
+    } else {
+        return false;
+    }
+  }
+}
 ?>
