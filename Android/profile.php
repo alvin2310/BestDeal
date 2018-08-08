@@ -44,15 +44,15 @@ elseif (isset($_POST['user_id']) && $_POST['action']=="post") {
   $kota = $_POST['kota'];
   $provinsi = $_POST['provinsi'];
   $email = $_POST['email'];
-  $no_hp = $_POST['no_hp'];
+  $no_hp = $_POST['nohp'];
   $earn = $_POST['earn'];
-  $spent = $_POST['spent'];
-  $simpanan = $_POST['simpanan'];
-  $password = $_POST['password'];
+  $spent = str_replace(".","",$_POST['spent']);
+  $simpanan = str_replace(".","",$_POST['simpanan']);
+  $password = str_replace(".","",$_POST['password']);
 
   // get the user by email and password
   // get user berdasarkan email dan password
-  $user = $db->saveProfile($user_id,$firstname,$lastname,$gender,$age,$country,$city,$hcolor,$hlength,$htype,$ecolor,$ewear,$height,$weight,$btype,$bart,$appearance,$fhair,$drink,$smoke,$occupation,$employment,$home,$living,$nationality,$religion,$chinese_sign);
+  $user = $db->saveProfile($uid,$password,$firstname,$lastname,$alamat,$kota,$provinsi,$email,$no_hp,$earn,$spent,$simpanan);
   if ($user != false) {
     // user ditemukan
     $response["error"] = FALSE;

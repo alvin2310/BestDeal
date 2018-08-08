@@ -204,16 +204,36 @@ class Profile{
     }
   }
 
-  public function saveProfile($user_id,$firstname,$lastname,$gender,$age,$country,$city,$hcolor,$hlength,$htype,$ecolor,$ewear,$height,$weight,$btype,$bart,$appearance,$fhair,$drink,$smoke,$occupation,$employment,$home,$living,$nationality,$religion,$chinese_sign){
-    if($password==""){
-
-    } else {
-      $pass = hash('sha256', $password);
-    }
-    $query="CALL usp_fms_Profile_SV($user_id,'$firstname','$lastname','$gender',$age,$country,$city,$hcolor,$hlength,$htype,$ecolor,$ewear,$height,$weight,$btype,$bart,$appearance,$fhair,$drink,$smoke,$occupation,$employment,$home,$living,$nationality,$religion,$chinese_sign)";
+  public function saveProfile($userid,$password,$firstname,$lastname,$alamat,$kota,$provinsi,$email,$no_hp,$earn,$spent,$simpanan){
+    $pass = hash('sha256', $password);
+      if($password==""){
+          $query = "UPDATE tbl_users SET 
+                      first_name='$firstname',
+                      last_name='$lastname',
+                      alamat='$alamat',
+                      kota='$kota',
+                      provinsi='$provinsi',
+                      email='$email',
+                      no_telp='$no_hp',
+                      user_earn='$earn',
+                      user_spent='$spent',
+                      simpanan='$simpanan' WHERE user_id=$userid ";
+      } else {
+          $query = "UPDATE tbl_users SET 
+                      user_password='$pass',
+                      first_name='$firstname',
+                      last_name='$lastname',
+                      alamat='$alamat',
+                      kota='$kota',
+                      provinsi='$provinsi',
+                      email='$email',
+                      no_telp='$no_hp',
+                      user_earn='$earn',
+                      user_spent='$spent',
+                      simpanan='$simpanan' WHERE user_id=$userid ";
+      }
     //echo $query;
     $stmt = $this->conn->prepare($query);
-    //$stmt->bind_param("sss", $user_id,$user_to,$cond);
     if ($stmt->execute()) {
         $stmt->close();
         return true;

@@ -9,6 +9,7 @@ $response = array("error" => FALSE);
 
 if(isset($_POST['user_id'])){
   $userid = $_POST['user_id'];
+  
   $user = $db->home($userid);
     if ($user != false) {
     $n = count($user);
