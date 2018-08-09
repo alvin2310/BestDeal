@@ -146,15 +146,15 @@
                 <input type="text" class="form-control" id="no_hp" name="no_hp" pattern="\d*" placeholder="No Hp" minlength="10" maxlength="12" value="<?php echo $profile[0]['no_telp']; ?>" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" required>
               </div>
               <div class="form-group">
-                <label class="control-label">Pendapatan</label>
+                <label class="control-label">Pendapatan / Bulan</label>
                 <input type="text" class="form-control" id="earn" name="earn" placeholder="Pendapatan" value="<?php echo number_format($profile[0]['user_earn'],0,',','.'); ?>" autocomplete="off" maxlength="20" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" required>
               </div>
               <div class="form-group">
-                <label class="control-label">Pengeluaran</label>
+                <label class="control-label">Pengeluaran / Bulan</label>
                 <input type="text" class="form-control" id="spent" name="spent" placeholder="Pengeluaran" value="<?php echo number_format($profile[0]['user_spent'],0,',','.'); ?>" autocomplete="off" maxlength="20" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" required>
               </div>
               <div class="form-group">
-                <label class="control-label">Simpanan</label>
+                <label class="control-label">Min. DP</label>
                 <input type="text" class="form-control" id="simpanan" name="simpanan" placeholder="Simpanan" autocomplete="off" maxlength="20" value="<?php echo number_format($profile[0]['simpanan'],0,',','.'); ?>" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" required>
               </div>
               <p class="text-center">
