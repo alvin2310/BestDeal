@@ -97,12 +97,15 @@ class Module{
     //Tampilkan Daftar
       $HasilAkhir = array();
       $query = "SELECT A.*,
+                CASE WHEN AA.rating IS NULL THEN 0 ELSE AA.rating END ratingPoint,
                 CASE WHEN avgrating IS NULL THEN 0 ELSE avgrating END avgrating,
                 CASE WHEN totalrating IS NULL THEN 0 ELSE totalrating END totalrating 
                 FROM tbl_rumah A
+                LEFT JOIN tbl_rating AA ON A.rumah_id=AA.rumah_id AND AA.user_id=$user_id
                 LEFT JOIN(SELECT rumah_id,SUM(rating)/COUNT(rating) avgrating,COUNT(rating) totalrating FROM tbl_rating 
                 GROUP BY rumah_id) B ON A.rumah_id=B.rumah_id
-                WHERE (harga * 20 / 100)<='$resultPrice' ORDER BY avgrating";
+                WHERE (harga * 20 / 100)<='$resultPrice'
+                ORDER BY avgrating DESC";
       //echo $query;
       $hasil = $kns->OpenCon()->query($query);
       if(mysqli_num_rows($hasil)<1){
@@ -117,6 +120,7 @@ class Module{
             "jenis" => isset($value['jenis']) ? $value['jenis'] : 0,
             "harga" => $data['harga'],
             "rumah_photo" => $data['rumah_photo'],
+            "point" => $data['ratingPoint'],
             "avg" => number_format($data['avgrating'],2)
           );
           array_push($HasilAkhir,$item);

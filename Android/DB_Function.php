@@ -13,13 +13,15 @@
     public function home($userid) {
       $user=array();
       $query="SELECT A.*,
+              CASE WHEN AA.rating IS NULL THEN 0 ELSE AA.rating END ratingPoint,
               CASE WHEN avgrating IS NULL THEN 0 ELSE avgrating END avgrating,
               CASE WHEN totalrating IS NULL THEN 0 ELSE totalrating END totalrating 
               FROM tbl_rumah A
+              LEFT JOIN tbl_rating AA ON A.rumah_id=AA.rumah_id AND AA.user_id=$userid
               LEFT JOIN(SELECT rumah_id,SUM(rating)/COUNT(rating) avgrating,COUNT(rating) totalrating FROM tbl_rating 
               GROUP BY rumah_id) B ON A.rumah_id=B.rumah_id
-              ORDER BY avgrating
-              LIMIT 5";
+              ORDER BY avgrating DESC";
+      //echo $query;
       $stmt=$this->conn->prepare($query);
       if($stmt->execute()) {
         $result = $stmt->get_result();
@@ -31,6 +33,7 @@
               "jenis" => $data['jenis'],
               "harga" => number_format($data['harga'],0,",","."),
               "photo" => $data['rumah_photo'],
+              "point" => $data['ratingPoint'],
               "avg" => $data['avgrating']
           );
         }
@@ -44,12 +47,14 @@
     public function listhome($userid) {
       $user=array();
       $query="SELECT A.*,
+              CASE WHEN AA.rating IS NULL THEN 0 ELSE AA.rating END ratingPoint,
               CASE WHEN avgrating IS NULL THEN 0 ELSE avgrating END avgrating,
               CASE WHEN totalrating IS NULL THEN 0 ELSE totalrating END totalrating 
               FROM tbl_rumah A
+              LEFT JOIN tbl_rating AA ON A.rumah_id=AA.rumah_id AND AA.user_id=$userid
               LEFT JOIN(SELECT rumah_id,SUM(rating)/COUNT(rating) avgrating,COUNT(rating) totalrating FROM tbl_rating 
               GROUP BY rumah_id) B ON A.rumah_id=B.rumah_id
-              ORDER BY avgrating";
+              ORDER BY avgrating DESC";
       $stmt=$this->conn->prepare($query);
       if($stmt->execute()) {
         $result = $stmt->get_result();
@@ -61,6 +66,7 @@
               "jenis" => $data['jenis'],
               "harga" => number_format($data['harga'],0,",","."),
               "photo" => $data['rumah_photo'],
+              "point" => $data['ratingPoint'],
               "avg" => $data['avgrating']
           );
         }
@@ -79,13 +85,26 @@
               FROM tbl_rumah A
               LEFT JOIN(SELECT rumah_id,SUM(rating)/COUNT(rating) avgrating,COUNT(rating) totalrating FROM tbl_rating 
               GROUP BY rumah_id) B ON A.rumah_id=B.rumah_id
-              WHERE A.rumah_id=$rumahid
-              ORDER BY avgrating
-              LIMIT 5";
+              WHERE A.rumah_id=$rumahid";
       $stmt=$this->conn->prepare($query);
       if($stmt->execute()) {
         $result = $stmt->get_result();
         while($data=$result->fetch_assoc()) {
+          if(isset($data['alamat'])){
+            $address = str_replace(" ","+",$data['alamat']);
+            $geo = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&sensor=false');
+  
+            // We convert the JSON to an array
+            $geo = json_decode($geo, true);
+  
+            // If everything is cool
+            $latitude = $geo['results'][0]['geometry']['location']['lat'];
+            $longitude = $geo['results'][0]['geometry']['location']['lng'];
+          } else {
+            $latitude = "3.597031";
+            $longitude = "98.678513";
+          }
+
           $user[]=array(
               "id" => $data['rumah_id'],
               "name" => $data['rumah_name'],
@@ -93,6 +112,8 @@
               "jenis" => $data['jenis'],
               "harga" => number_format($data['harga'],0,",","."),
               "alamat" => $data['alamat'],
+              "lat" => $latitude,
+              "lng" => $longitude,
               "photo" => $data['rumah_photo'],
               "avg" => $data['avgrating'],
               "description" => $data['rumah_description']
@@ -179,67 +200,67 @@
     }
   }
 
-class Profile{
-  private $conn;
-    
-  // constructor
-  function __construct() {
-    require_once '../config.php';
-    // koneksi ke database
-    $db = new Db_con();
-    $this->conn = $db->OpenCon();
-  }
-
-  public function loadProfile($user_id){
-    $query="SELECT * FROM tbl_users
-            WHERE user_id=$user_id";
-    //echo $query;
-    $stmt = $this->conn->prepare($query);
-    if ($stmt->execute()) {
-        $user = $stmt->get_result()->fetch_assoc();
-        $stmt->close();
-        return $user;
-    } else {
-        return NULL;
+  class Profile{
+    private $conn;
+      
+    // constructor
+    function __construct() {
+      require_once '../config.php';
+      // koneksi ke database
+      $db = new Db_con();
+      $this->conn = $db->OpenCon();
     }
-  }
 
-  public function saveProfile($userid,$password,$firstname,$lastname,$alamat,$kota,$provinsi,$email,$no_hp,$earn,$spent,$simpanan){
-    $pass = hash('sha256', $password);
-      if($password==""){
-          $query = "UPDATE tbl_users SET 
-                      first_name='$firstname',
-                      last_name='$lastname',
-                      alamat='$alamat',
-                      kota='$kota',
-                      provinsi='$provinsi',
-                      email='$email',
-                      no_telp='$no_hp',
-                      user_earn='$earn',
-                      user_spent='$spent',
-                      simpanan='$simpanan' WHERE user_id=$userid ";
+    public function loadProfile($user_id){
+      $query="SELECT * FROM tbl_users
+              WHERE user_id=$user_id";
+      //echo $query;
+      $stmt = $this->conn->prepare($query);
+      if ($stmt->execute()) {
+          $user = $stmt->get_result()->fetch_assoc();
+          $stmt->close();
+          return $user;
       } else {
-          $query = "UPDATE tbl_users SET 
-                      user_password='$pass',
-                      first_name='$firstname',
-                      last_name='$lastname',
-                      alamat='$alamat',
-                      kota='$kota',
-                      provinsi='$provinsi',
-                      email='$email',
-                      no_telp='$no_hp',
-                      user_earn='$earn',
-                      user_spent='$spent',
-                      simpanan='$simpanan' WHERE user_id=$userid ";
+          return NULL;
       }
-    //echo $query;
-    $stmt = $this->conn->prepare($query);
-    if ($stmt->execute()) {
-        $stmt->close();
-        return true;
-    } else {
-        return false;
+    }
+
+    public function saveProfile($userid,$password,$firstname,$lastname,$alamat,$kota,$provinsi,$email,$no_hp,$earn,$spent,$simpanan){
+      $pass = hash('sha256', $password);
+        if($password==""){
+            $query = "UPDATE tbl_users SET 
+                        first_name='$firstname',
+                        last_name='$lastname',
+                        alamat='$alamat',
+                        kota='$kota',
+                        provinsi='$provinsi',
+                        email='$email',
+                        no_telp='$no_hp',
+                        user_earn='$earn',
+                        user_spent='$spent',
+                        simpanan='$simpanan' WHERE user_id=$userid ";
+        } else {
+            $query = "UPDATE tbl_users SET 
+                        user_password='$pass',
+                        first_name='$firstname',
+                        last_name='$lastname',
+                        alamat='$alamat',
+                        kota='$kota',
+                        provinsi='$provinsi',
+                        email='$email',
+                        no_telp='$no_hp',
+                        user_earn='$earn',
+                        user_spent='$spent',
+                        simpanan='$simpanan' WHERE user_id=$userid ";
+        }
+      //echo $query;
+      $stmt = $this->conn->prepare($query);
+      if ($stmt->execute()) {
+          $stmt->close();
+          return true;
+      } else {
+          return false;
+      }
     }
   }
-}
 ?>

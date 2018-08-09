@@ -21,6 +21,8 @@ if(isset($_POST['rumah_id'])){
           "jenis" => $value['jenis'],
           "harga" => $value['harga'],
           "alamat" => isset($value['alamat']) ? $value['alamat'] : "",
+          "lat" => $value['lat'],
+          "lng" => $value['lng'],
           "rumah_photo" => isset($value["photo"]) ? $value["photo"] : 'empty',
           "rating" => isset($value['avg']) ? $value['avg'] : '0.00',
           "description" => $value['description']

@@ -23,6 +23,7 @@ if(isset($_POST['user_id'])){
           "ukuran" => $value['ukuran'],
           "harga" => $value['harga'],
           "photo" => isset($value["rumah_photo"]) ? $value["rumah_photo"] : 'empty',
+          "point" => $value['point'],
           "avg" => $value['avg']
         );
       }
