@@ -146,10 +146,10 @@
             <p>Tanah</p>
           </div>
           <div id="draggable" class="ui-widget-content tool-master" name="door-pull">
-            <img src="gfx/items-door-01.png" alt="Door Tarik" />
+            <img src="gfx/items-door-01.png" alt="Door Tarik" width="50" height="50" />
           </div>
           <div id="draggable" class="ui-widget-content tool-master" name="door-push">
-            <img src="gfx/items-door-02.png" alt="Door Dorong" />
+            <img src="gfx/items-door-02.png" alt="Door Dorong" width="50" height="50" />
           </div>
           <div id="draggable" class="ui-widget-content tool-master" name="jendela-v">
             <img src="gfx/Window_V.png" alt="Jendela Vertical" width="50" height="50" />
@@ -191,6 +191,24 @@
           }
         });
       });
+      $(document).on("click","div.item-child", function(event){
+        $(this).addEventListener('keydown', function (event) {
+          if (event.keyCode == 8) {
+              console.log('BACKSPACE was pressed');
+
+              // Call event.preventDefault() to stop the character before the cursor
+              // from being deleted. Remove this line if you don't want to do that.
+              event.preventDefault();
+          }
+          if (event.keyCode == 46) {
+              console.log('DELETE was pressed');
+
+              // Call event.preventDefault() to stop the character after the cursor
+              // from being deleted. Remove this line if you don't want to do that.
+              event.preventDefault();
+          }
+        });
+      });
     </script>
     <hr>
     <script type="text/javascript" src="./js/html2canvas.js"></script>
@@ -198,17 +216,17 @@
     <button id="btn-clear" class="btn btn-danger">Clear</button>
     <button id="btn-exit" class="btn btn-info">Keluar</button>
     <script>
-      var filename = $("#rumah_name").val();
-        $('#btn-success').click(function(){
-          if(filename==""){
-            alert("Isi tipe rumah terlebih dahulu !"+filename);
-          } else {
-            html2canvas(document.querySelector('#canvas')).then(function(canvas) {
-            console.log(canvas);
-            saveAs(canvas.toDataURL(), filename+'.png');
-            });
-          }
-        });
+      $('#btn-success').click(function(){
+        var filename = $("#rumah_name").val();
+        if(filename==null){
+          alert("Isi tipe rumah terlebih dahulu !"+filename);
+        } else {
+          html2canvas(document.querySelector('#canvas')).then(function(canvas) {
+          console.log(canvas);
+          saveAs(canvas.toDataURL(), filename+'.png');
+          });
+        }
+      });
       function saveAs(uri, filename) {
         var link = document.createElement('a');
         if (typeof link.download === 'string') {

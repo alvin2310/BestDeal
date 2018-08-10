@@ -79,7 +79,7 @@
             <h3 class="agile_title one">Rancang</h3>
           <p class="w3l-agile-its-title">Rancang rumah anda</p>
         </div>
-        <div id="myTabContent" class="tab-content">
+        <!-- <div id="myTabContent" class="tab-content">
           <form method="post" name="profile">
             <div class="form-group">
               <label class="control-label">Nama Rumah</label>
@@ -101,7 +101,7 @@
               <button type="submit" id="save" name="save" class="btn btn-info btn-lg" onclick="return(submitlogin());"><i class="fa fa-save"></i> Save</button>
             </p>
           </form>
-        </div>
+        </div> -->
         <?php
           include("create.php");
         ?>
