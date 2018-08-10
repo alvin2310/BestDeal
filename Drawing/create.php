@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Design the House</title>
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
   <style>
@@ -33,6 +36,8 @@
 			text-align: center;
 		}
   </style>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
   <script type="text/javascript">
     $(document).on("mouseover","div.tool-master", function(event){
@@ -110,6 +115,15 @@
   <div class="col-xs-2">
     <button id="removeTingkat" class="btn btn-block btn-danger">Remove <i class="fa fa-minus"></i></button>
   </div> -->
+  <form method="post">
+    <label class="control-label">Rumah Type</label>
+    <input type="text" class="form-control" id="rumah_name" name="rumah_name" required />
+    <label class="control-label">Alamat</label>
+    <input type="text" class="form-control" id="alamat" name="alamat" required />
+    <label class="control-label">Harga Jual</label>
+    <input type="text" class="form-control" id="harga" name="harga" required />
+    <button class="btn btn-primary">Save</button>
+  </form>
   <div class="col-lg-12">
     <br>
     <label class="control-label">NB:</label>
@@ -156,7 +170,6 @@
         </td>
       </tr>
     </table>
-    <!-- <canvas width="500" height="200"></canvas> -->
     <script type="text/javascript">
       $(document).on("mouseover","div.item-child", function(event){
         var itemType = $(this).find("p").text();
@@ -185,12 +198,17 @@
     <button id="btn-clear" class="btn btn-danger">Clear</button>
     <button id="btn-exit" class="btn btn-info">Keluar</button>
     <script>
-      $('#btn-success').click(function(){
-        html2canvas(document.querySelector('#canvas')).then(function(canvas) {
-        console.log(canvas);
-        saveAs(canvas.toDataURL(), 'denah.png');
+      var filename = $("#rumah_name").val();
+        $('#btn-success').click(function(){
+          if(filename==""){
+            alert("Isi tipe rumah terlebih dahulu !"+filename);
+          } else {
+            html2canvas(document.querySelector('#canvas')).then(function(canvas) {
+            console.log(canvas);
+            saveAs(canvas.toDataURL(), filename+'.png');
+            });
+          }
         });
-      });
       function saveAs(uri, filename) {
         var link = document.createElement('a');
         if (typeof link.download === 'string') {
@@ -211,7 +229,7 @@
       $("#btn-clear").click(function() {
         $( ".dropzone" ).html("");
       });
-      $('#btn-exit').click(function(){
+      $("#btn-exit").click(function() {
         window.location = "../index.php";
       });
       /* $("#addTingkat").click(function(event){
