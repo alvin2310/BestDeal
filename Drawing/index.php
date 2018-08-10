@@ -79,6 +79,29 @@
             <h3 class="agile_title one">Rancang</h3>
           <p class="w3l-agile-its-title">Rancang rumah anda</p>
         </div>
+        <div id="myTabContent" class="tab-content">
+          <form method="post" name="profile">
+            <div class="form-group">
+              <label class="control-label">Nama Rumah</label>
+              <input type="text" class="form-control" id="rumah_name" name="rumah_name" placeholder="Type Rumah" autocomplete="off" />
+            </div>
+            <div class="form-group">
+              <label class="control-label">Alamat</label>
+              <textarea class="form-control" id="alamat" name="alamat" rows="5" required></textarea>
+            </div>
+            <div class="form-group">
+              <label class="control-label">Harga Jual Rumah</label>
+              <input type="text" class="form-control" id="harga" name="harga" placeholder="Harga Jual" autocomplete="off" />
+            </div>
+            <div class="form-group">
+              <label class="control-label">Deskripsi</label>
+              <textarea class="form-control" id="deskripsi" name="deskripsi" rows="5" required></textarea>
+            </div>
+            <p class="text-center">
+              <button type="submit" id="save" name="save" class="btn btn-info btn-lg" onclick="return(submitlogin());"><i class="fa fa-save"></i> Save</button>
+            </p>
+          </form>
+        </div>
         <?php
         include("create.php");
         ?>
