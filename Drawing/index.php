@@ -35,6 +35,8 @@
         setTimeout(titleMarquee, 100);
       })();
     </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   </head>
   <body>
     <div class="banner-top">
@@ -80,13 +82,13 @@
           <p class="w3l-agile-its-title">Rancang rumah anda</p>
         </div>
         <?php
-        include("create.php");
+          include("create.php");
         ?>
       </div>
     </div>
     <!-- <script src="../js/jquery-2.2.3.min.js"></script> -->
     <!-- Stats-Number-Scroller-Animation-JavaScript -->
-      <script src="../js/waypoints.min.js"></script> 
+      <!-- <script src="../js/waypoints.min.js"></script> -->
       <script src="../js/counterup.min.js"></script> 
       <script>
         jQuery(document).ready(function( $ ) {
@@ -119,7 +121,7 @@
     </script>
     <script src="../js/bootstrap.js"></script>
     <script src="../js/jquery.tools.min.js"></script>
-    <script src="../js/jquery.mobile.custom.min.js"></script>
+    <!-- <script src="../js/jquery.mobile.custom.min.js"></script> -->
     <script src="../js/jquery.cm-overlay.js"></script>
     <script>
       $(document).ready(function(){
