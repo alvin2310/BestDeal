@@ -188,7 +188,7 @@
       $('#btn-success').click(function(){
         html2canvas(document.querySelector('#canvas')).then(function(canvas) {
         console.log(canvas);
-        saveAs(canvas.toDataURL(), 'file-name.png');
+        saveAs(canvas.toDataURL(), 'denah.png');
         });
       });
       function saveAs(uri, filename) {
