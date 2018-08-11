@@ -215,6 +215,28 @@
             $(this)
               .find("p")
               .html(t);
+          } else {
+            var totalharga = $("#harga").val();
+            var pl = (parseInt(tWid)/60)*(parseInt(tHei)/40);
+            var pt = (parseInt(tHei)/40)*2.8;
+            var lt = (parseInt(tWid)/60)*2.8;
+            var luas = 2*(pl+pt+lt);
+            var semen = Math.round((luas*9.68)/50);
+            var pasir = Math.round((luas*0.045));
+            $.ajax({
+              type: 'POST',
+              url: 'getPrice.php',
+              data: 'semen='+semen+'&pasir='+pasir,
+              dataType: 'json',
+              success : function(data) {
+                if (data.status == 'ok') {
+                  $("#harga").val(totalharga+parseInt(data.totalHarga));
+                  $("#totalHarga").val(parseInt(hargaJual)+parseInt(data.totalHarga));
+                }else{
+                  alert('Some problem occured, please try again.');
+                }
+              }
+            });
           }
         });
       });

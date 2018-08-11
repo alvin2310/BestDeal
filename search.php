@@ -35,6 +35,29 @@
         setTimeout(titleMarquee, 100);
       })();
     </script>
+    <!-- Rating System -->
+      <link href="css/rating.css" rel="stylesheet" type="text/css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+      <script type="text/javascript" src="js/rating.js"></script>
+      <script language="javascript" type="text/javascript">
+      function processRating(val, attrVal){
+        $.ajax({
+            type: 'POST',
+            url: 'rating.php',
+            data: 'postID='+attrVal+'&ratingPoints='+val,
+            dataType: 'json',
+            success : function(data) {
+                if (data.status == 'ok') {
+                    $('#avgrat').text(data.avgrating);
+                    $('#totalrat').text(data.totalrating);
+                }else{
+                    alert('Some problem occured, please try again.');
+                }
+            }
+        });
+      }
+      </script>
+    <!-- End Rating -->
   </head>
   <body>
     <div class="banner-top">
@@ -82,10 +105,71 @@
 					</div>
 					<!-- Content List Data -->
 					<div id="myTabContent" class="tab-content">
-            <form>
-              <input class="form-control" placeholder="Keyword" />
-              <button class="btn btn-primary">Search</button>
-            </form>
+            <input class="form-control" name="keyword" id="keyword" placeholder="Keyword" autocomplete="off" />
+            <button class="btn btn-primary" name="search" id="search">Search</button>
+            <hr>
+            <div role="tabpanel" class="tab-pane fade in active" id="home-main" aria-labelledby="home-tab">
+              <div class="w3_tab_img" id="listHome">
+
+              </div>
+            </div>
+            <script>
+              $(document).on("click", "#open-View", function () {
+                var userid = <?php echo $_SESSION['user_id']; ?>;
+                //remove Old Widget
+                $('.rating_widget').remove();
+                $('.clear-fix').remove();
+                //Add New Widget
+                $("#rating_star").rating_widget({
+                    starLength: '5',
+                    initialValue: '',
+                    callbackFunctionName: 'processRating',
+                    imageDirectory: 'images/',
+                    inputAttr: 'data-postID'
+                });
+                var viewId = $(this).data('id');
+                $.ajax({
+                  type: 'POST',
+                  url: 'rating.php',
+                  data: 'postID='+viewId+'&userID='+userid,
+                  dataType: 'json',
+                  success : function(data) {
+                    if (data.status == 'ok') {
+                      var dp = data.harga * 20 / 100;
+                      var pct = "12%"; // or from an <input> field or whatever
+                      pct = parseFloat(pct) / 100;
+                      pct = (data.harga - dp) * pct;
+                      var lama = Math.ceil(( ((data.harga - dp) + pct) / data.selisih) / 12);
+                      if(lama > 5 && lama < 10) {
+                        lama = 10;
+                      } else if(lama > 10 && lama < 15) {
+                        lama = 15;
+                      }
+                      $('#rumah_name').html("<h4>"+data.rumah_name+"</h4>");
+                      $('#rating_star').attr('data-postID',data.rumah_id);
+                      $('#alamat').text(data.alamat);
+                      $('#min_dp').text(dp.toLocaleString('it-IT', {style: 'currency', currency: 'IDR'}));
+                      $('#lama_kpr').text(lama+" Tahun");
+                      $('#deskripsi').text(data.rumah_description);
+                      $('#bata').text(data.bata);
+                      $('#semen').text(data.semen);
+                      $('#kayu').text(data.kayu);
+                      $('#pasir').text(data.pasir);
+                      $('#beton').text(data.beton);
+                      $('#triplek').text(data.triplek);
+                      $('#asbes').text(data.asbes);
+                      $('#cat').text(data.cat);
+                      $('#avgrat').text(data.avgrating);
+                      $('#totalrat').text(data.totalrating);
+                    }else{
+                      alert('Some problem occured, please try again.');
+                    }
+                  }
+                });
+                /* $(".modal-footer #rating_start").postID(viewId); */
+                $('#view-modal').modal('show');
+              });
+            </script>
 					</div>
 				</div>
 			</div>
@@ -163,5 +247,25 @@
       </div>
     <!-- //copy-right -->
     <a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+    <script>
+      $("#search").click(function(){
+        var keyword = $("#keyword").val();
+        $.ajax({
+              type: 'POST',
+              url: 'search_get.php',
+              data: 'keyword='+keyword,
+              dataType: 'json',
+              success : function(data) {
+                if (data.status == 'ok') {
+                  $("#listHome").html("");
+                  $("#listHome").append(data.daftar);
+                }else{
+                  $("#listHome").html("");
+                  $("#listHome").html("<p>Tidak ada hasil pencarian</p>");
+                }
+              }
+            });
+      })
+    </script>
   </body>
 </html>
