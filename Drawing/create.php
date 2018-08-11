@@ -91,10 +91,29 @@
             //alert("The Top is "+(parseInt($item.css('top'))+selisih));
             $item.css("top",(parseInt($item.css('top'))+selisih) );
           }
-          /* if(parseInt($item.css('top'))<0){
-            var selisih = 66 - (parseInt($item.css('top'))*-1);
-            $item.css("top",selisih );
-          } */
+          
+          var hargaJual = $("#hargaJual").val();
+          var pl = (parseInt(300)/60)*(parseInt(480)/40);
+          var pt = (parseInt(480)/40)*2.8;
+          var lt = (parseInt(300)/60)*2.8;
+          var luas = 2*(pl+pt+lt);
+          var semen = Math.round((luas*9.68)/50);
+          var pasir = Math.round((luas*0.045));
+          $.ajax({
+            type: 'POST',
+            url: 'getPrice.php',
+            data: 'semen='+semen+'&pasir='+pasir,
+            dataType: 'json',
+            success : function(data) {
+              if (data.status == 'ok') {
+                $("#harga").val(data.totalHarga);
+                $("#totalHarga").val(parseInt(hargaJual)+parseInt(data.totalHarga));
+                $("#ukuran").val((parseInt(300)/60)+" x "+(parseInt(480)/40));
+              }else{
+                alert('Some problem occured, please try again.');
+              }
+            }
+          });
         }
       });
     });
@@ -120,13 +139,79 @@
     <input type="text" class="form-control" id="rumah_name" name="rumah_name" required />
     <label class="control-label">Alamat</label>
     <input type="text" class="form-control" id="alamat" name="alamat" required />
+    <label class="control-label">Ukuran</label>
+    <input type="text" class="form-control" id="ukuran" name="ukuran" required />
     <label class="control-label">Harga Modal</label>
     <input type="text" class="form-control" id="hargaJual" name="hargaJual" value=0 required />
     <label class="control-label">Harga Semen + Pasir</label>
     <input type="text" class="form-control" id="harga" name="harga" required />
     <label class="control-label">Total Jual</label>
     <input type="text" class="form-control" id="totalHarga" name="totalHarga" value=0 required />
-    <button class="btn btn-primary">Save</button>
+    <label class="form-label">Upload Design:</label>
+    <input type="file" name="photo_pict" class="filestyle" data-icon="false" accept="image/*">
+    <button type="submit" name="save" class="btn btn-primary">Save</button>           
+    <?php
+      $user = $_SESSION['user_name'];
+      if(isset($_POST['upload'])){
+        extract($_POST);
+        // definisi folder upload
+        define("UPLOAD_DIR", "img/user/");
+        if ( ! is_dir(UPLOAD_DIR)) {
+            mkdir(UPLOAD_DIR);
+        }
+        if (!empty($_FILES["photo_pict"])) {
+            $photo_pict = $_FILES["photo_pict"];
+            $ext    = pathinfo($_FILES["photo_pict"]["name"], PATHINFO_EXTENSION);
+            $size   = $_FILES["photo_pict"]["size"];
+
+            if ($photo_pict["error"] !== UPLOAD_ERR_OK) {
+                echo '<div class="alert alert-warning">Gagal upload file.</div>';
+                exit;
+            }
+            if ($size>3000000) {
+                echo '<div class="alert alert-warning">File terlalu besar,Gagal upload file.</div>';
+                exit;
+            }
+            // filename yang aman
+            $temp = explode(".", $_FILES["photo_pict"]["name"]);
+            $newfilename = $user . '.' . end($temp);
+
+            $name = preg_replace("/[^A-Z0-9._-]/i", "_", $newfilename);
+
+            // // mencegah overwrite filename
+            // $i = 0;
+            // $parts = pathinfo($name);
+            // while (file_exists(UPLOAD_DIR . $name)) {
+            // $i++;
+            // $name = $parts["filename"] . "-" . $i . "." . $parts["extension"];
+            // }
+
+            // upload file
+            $success = move_uploaded_file($photo_pict["tmp_name"],UPLOAD_DIR . $name);
+            if (!$success) {
+                echo '<div class="alert alert-warning">Gagal upload file.</div>';
+                exit;
+            }
+            else{
+                $kns = new DB_con();
+                $query = "INSERT INTO tbl_rumah (rumah_name,jenis,ukuran,harga,alamat,rumah_photo,rumah_description,rumah_sketch) VALUES('$rumah_name',1,'$ukuran',$totalHarga,'$alamat',NULL,'','images/Home/$name')";
+                $hasil = $kns->OpenCon()->query($query) or die($kns->OpenCon()->error);
+                if($hasil){
+                    //echo '<div class="alert alert-success">File berhasil di upload.</div>';
+                    echo "<script type='text/javascript'>
+                          alert(Rumah baru sudah di tambahkan');
+                          window.location='index.php';
+                          </script>";
+                }else{
+                    echo '<div class="alert alert-warning">Gagal upload file.</div>';
+                    exit;
+                }
+            }
+            // set permisi file
+            chmod(UPLOAD_DIR . $name, 0644);
+        }
+      }
+    ?>
   </form>
   <div class="col-lg-12">
     <br>
@@ -207,6 +292,7 @@
                 if (data.status == 'ok') {
                   $("#harga").val(data.totalHarga);
                   $("#totalHarga").val(parseInt(hargaJual)+parseInt(data.totalHarga));
+                  $("#ukuran").val((parseInt(tWid)/60)+" x "+(parseInt(tHei)/40));
                 }else{
                   alert('Some problem occured, please try again.');
                 }
