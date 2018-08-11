@@ -62,7 +62,7 @@
             $item.css("z-index",2);
             var tWid = $item.width();
             var tHei = $item.height();
-            var t = "P:"+tWid+" <br />L:"+tHei;
+            var t = "P:"+tHei+" <br />L:"+tWid;
             $item
               .find("p")
               .html(t);
@@ -120,8 +120,12 @@
     <input type="text" class="form-control" id="rumah_name" name="rumah_name" required />
     <label class="control-label">Alamat</label>
     <input type="text" class="form-control" id="alamat" name="alamat" required />
-    <label class="control-label">Harga Jual</label>
+    <label class="control-label">Harga Modal</label>
+    <input type="text" class="form-control" id="hargaJual" name="hargaJual" value=0 required />
+    <label class="control-label">Harga Semen + Pasir</label>
     <input type="text" class="form-control" id="harga" name="harga" required />
+    <label class="control-label">Total Jual</label>
+    <input type="text" class="form-control" id="totalHarga" name="totalHarga" value=0 required />
     <button class="btn btn-primary">Save</button>
   </form>
   <div class="col-lg-12">
@@ -172,19 +176,42 @@
     </table>
     <script type="text/javascript">
       $(document).on("mouseover","div.item-child", function(event){
-        var itemType = $(this).find("p").text();
+        var itemType = $(this).attr("name");
         $(this).draggable({
           cursor: "move",
           containment: ".dropzone"
         });
         $(this).resizable({
-          grid: 1
+          grid: 1,
+          containment: ".dropzone"
         });
         $(this).resize(function() {
-          var tWid = $(this).width();
-          var tHei = $(this).height();
-          var t = "P:"+tWid+" <br />L:"+tHei;
-          if(itemType=="Tanah"){
+          var tWid = $(this).css("width");
+          var tHei = $(this).css("height");
+          var hargaJual = $("#hargaJual").val();
+          var t = "P:"+tHei+" <br />L:"+tWid;
+          if(itemType=="tanah"){
+            var totalharga = 0;
+            var pl = (parseInt(tWid)/60)*(parseInt(tHei)/40);
+            var pt = (parseInt(tHei)/40)*2.8;
+            var lt = (parseInt(tWid)/60)*2.8;
+            var luas = 2*(pl+pt+lt);
+            var semen = Math.round((luas*9.68)/50);
+            var pasir = Math.round((luas*0.045));
+            $.ajax({
+              type: 'POST',
+              url: 'getPrice.php',
+              data: 'semen='+semen+'&pasir='+pasir,
+              dataType: 'json',
+              success : function(data) {
+                if (data.status == 'ok') {
+                  $("#harga").val(data.totalHarga);
+                  $("#totalHarga").val(parseInt(hargaJual)+parseInt(data.totalHarga));
+                }else{
+                  alert('Some problem occured, please try again.');
+                }
+              }
+            });
             $(this)
               .find("p")
               .html(t);
