@@ -60,9 +60,9 @@
             $item.removeClass("tool-master");
             $item.attr("id",itemType);
             $item.css("z-index",2);
-            var tWid = $item.width();
-            var tHei = $item.height();
-            var t = "P:"+tHei+" <br />L:"+tWid;
+            var tWid = parseInt($item.width());
+            var tHei = parseInt($item.height());
+            var t = "P:"+(tHei/40)+"m <br />L:"+(tWid/60)+"m";
             $item
               .find("p")
               .html(t);
@@ -271,10 +271,10 @@
           containment: ".dropzone"
         });
         $(this).resize(function() {
-          var tWid = $(this).css("width");
-          var tHei = $(this).css("height");
+          var tWid = parseInt($(this).css("width"));
+          var tHei = parseInt($(this).css("height"));
           var hargaJual = $("#hargaJual").val();
-          var t = "P:"+tHei+" <br />L:"+tWid;
+          var t = "P:"+(tHei/40).toFixed(1)+"m <br />L:"+(tWid/60).toFixed(1)+"m";
           if(itemType=="tanah"){
             var totalharga = 0;
             var pl = (parseInt(tWid)/60)*(parseInt(tHei)/40);

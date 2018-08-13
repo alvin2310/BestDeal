@@ -142,18 +142,6 @@
 								?>
 								<div class="clearfix"> </div>
               </div>
-              <?php
-                /* $kns = new DB_con();
-                $query = "SELECT * FROM tbl_users
-                          WHERE user_id=".$_SESSION['user_id']." AND (user_earn=0 OR user_spent=0 OR simpanan=0)";
-                $result = $kns->OpenCon()->query($query);
-                if($result->num_rows==1){
-                  echo "
-                    <p>For a better Recommendation please fill your profile First !</p>
-                    <a href='./profile.php' class='btn btn-info btn-lg'>Go to Profile</a>
-                  ";
-                } */
-              ?>
 						</div>
             <script>
               $(document).on("click", "#open-View", function () {

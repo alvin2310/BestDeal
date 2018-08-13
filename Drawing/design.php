@@ -76,20 +76,11 @@
     <div class="gallery" id="design">
       <div class="container">
         <div class="wthree-tittle">
-            <h3 class="agile_title one">Daftar Rumah</h3>
+            <h3 class="agile_title one">Rancang</h3>
           <p class="w3l-agile-its-title">Rancang rumah anda</p>
         </div>
         <?php
-          $kns = new DB_con();
-          $query = "SELECT * FROM tbl_rumah
-                    WHERE user_id=".$_SESSION['user_id']."";
-          $result = $kns->OpenCon()->query($query);
-          if($result->num_rows==0){
-            echo "
-              <p>Kamu belum ada rancangan rumah buat baru ?</p>
-              <a href='./design.php' class='btn btn-info btn-lg'>Design</a>
-            ";
-          }
+          include("create.php");
         ?>
       </div>
     </div>
