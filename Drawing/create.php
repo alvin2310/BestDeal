@@ -316,7 +316,7 @@
               dataType: 'json',
               success : function(data) {
                 if (data.status == 'ok') {
-                  $("#harga").val(totalharga+parseInt(data.totalHarga));
+                  $("#harga").val(parseInt(totalharga)+parseInt(data.totalHarga));
                   $("#totalHarga").val(parseInt(hargaJual)+parseInt(data.totalHarga));
                 }else{
                   alert('Some problem occured, please try again.');
