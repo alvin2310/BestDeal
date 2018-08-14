@@ -79,9 +79,7 @@
             var tHei = parseInt($item.height());
             var t = "P:"+(tHei/40)+"m <br />L:"+(tWid/60)+"m";
             var hargaTanah = ((tHei/40)*(tWid/60)) * 1000000; //$("#hargatanah").val();
-            var jlhBata = ((tHei/40)*(tWid/60)) * 36;
             $("#hargatanah").val(hargaTanah);
-            $("#qtybata").val(jlhBata)
             $item
               .find("p")
               .html(t);
@@ -115,8 +113,10 @@
           var pt = (parseInt(480)/40)*2.8;
           var lt = (parseInt(300)/60)*2.8;
           var luas = 2*(pl+pt+lt);
-          var semen = Math.round((luas*9.68)/50);
+          var semen = Math.round((luas*9.68));
           var pasir = Math.round((luas*0.045));
+          var jlhBata = luas * 36;
+          $("#qtybata").val(jlhBata)
           $.ajax({
             type: 'POST',
             url: 'getPrice.php',
@@ -306,9 +306,9 @@
       <div class="col-md-3">
       <label class="control-label">Jenis Pasir</label>
       <select class="form-control" id="jenis_pasir" name="jenis_pasir">
-        <option value="1">Pasir Beton / M3</option>
-        <option value="2" selected>Pasir Biasa / M3</option>
-        <option value="3">Pasir Mundu / M3</option>
+        <option value="23">Pasir Beton / M3</option>
+        <option value="24" selected>Pasir Biasa / M3</option>
+        <option value="25">Pasir Mundu / M3</option>
       </select>
       <label class="control-label">Pasir</label>
       <input type="text" class="form-control" id="qtypasir" name="qtypasir" placeholder="Jlh Pasir" readonly />
