@@ -1,11 +1,26 @@
+<?php
+  session_start();
+  include('../config.php');
+
+?>
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Design the House</title>
+  <title>Design the House</title>
+  
+  <!-- Favicon  -->
+  <link rel="icon" href="../favicon.ico">
+  <!-- //for-mobile-apps -->
+  <link href="../css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+  <link rel="stylesheet" href="../css/cm-overlay.css">
+  <link href="../css/style.css" rel="stylesheet" type="text/css" media="all" />
+  <!-- font-awesome icons -->
+  <link href="../css/font-awesome.css" rel="stylesheet"> 
+  <!-- //font-awesome icons -->
+
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
   <style>
 		table td {
 			width: 1024px;
@@ -63,6 +78,10 @@
             var tWid = parseInt($item.width());
             var tHei = parseInt($item.height());
             var t = "P:"+(tHei/40)+"m <br />L:"+(tWid/60)+"m";
+            var hargaTanah = ((tHei/40)*(tWid/60)) * 1000000; //$("#hargatanah").val();
+            var jlhBata = ((tHei/40)*(tWid/60)) * 36;
+            $("#hargatanah").val(hargaTanah);
+            $("#qtybata").val(jlhBata)
             $item
               .find("p")
               .html(t);
@@ -91,8 +110,7 @@
             //alert("The Top is "+(parseInt($item.css('top'))+selisih));
             $item.css("top",(parseInt($item.css('top'))+selisih) );
           }
-          
-          var hargaJual = $("#hargaJual").val();
+          var hargaTanah = $("#hargatanah").val();
           var pl = (parseInt(300)/60)*(parseInt(480)/40);
           var pt = (parseInt(480)/40)*2.8;
           var lt = (parseInt(300)/60)*2.8;
@@ -107,7 +125,7 @@
             success : function(data) {
               if (data.status == 'ok') {
                 $("#harga").val(data.totalHarga);
-                $("#totalHarga").val(parseInt(hargaJual)+parseInt(data.totalHarga));
+                $("#totalHarga").val(parseInt(hargaTanah)+parseInt(data.totalHarga));
                 $("#ukuran").val((parseInt(300)/60)+" x "+(parseInt(480)/40));
               }else{
                 alert('Some problem occured, please try again.');
@@ -120,36 +138,205 @@
 	</script>
 </head>
 <body>
-  <!-- <div class="col-md-2">
-    <label class="control-label">Jumlah Tingkat</label>
+  <div class="col-lg-12">
+    <table border="1">
+      </tr>
+        <th>Tools</th>
+        <th>Canvas</th>
+      </tr>
+      <tr>
+        <td class="tools">
+          <div id="draggable" class="ui-widget-content tool-master" name="tanah">
+            <p>Tanah</p>
+          </div>
+          <div id="draggable" class="ui-widget-content tool-master" name="door-pull">
+            <img src="gfx/items-door-01.png" alt="Door Tarik" width="50" height="50" />
+          </div>
+          <div id="draggable" class="ui-widget-content tool-master" name="door-push">
+            <img src="gfx/items-door-02.png" alt="Door Dorong" width="50" height="50" />
+          </div>
+          <!-- <div id="draggable" class="ui-widget-content tool-master" name="jendela-v">
+            <img src="gfx/Window_V.png" alt="Jendela Vertical" width="50" height="50" />
+          </div>
+          <div id="draggable" class="ui-widget-content tool-master" name="jendela-h">
+            <img src="gfx/Window_H.png" alt="Jendela Horizontal" width="50" height="50" />
+          </div> -->
+          <div id="draggable" class="ui-widget-room tool-master" name="room">
+            <p>Room</p>
+          </div>
+          <div id="draggable" class="ui-widget-wc tool-master" name="wc">
+            <p>WC</p>
+          </div>
+        </td>
+        <td id="canvas" class="canvas">
+          <div id="d1" class="dropzone">
+          </div>
+        </td>
+      </tr>
+    </table>
+    <script type="text/javascript">
+      $(document).on("mouseover","div.item-child", function(event){
+        var itemType = $(this).attr("name");
+        $(this).draggable({
+          cursor: "move",
+          containment: ".dropzone"
+        });
+        $(this).resizable({
+          grid: 1,
+          containment: ".dropzone"
+        });
+        $(this).resize(function() {
+          var tWid = parseInt($(this).css("width"));
+          var tHei = parseInt($(this).css("height"));
+          var hargaTanah = $("#hargatanah").val();
+          var t = "P:"+(tHei/40).toFixed(1)+"m <br />L:"+(tWid/60).toFixed(1)+"m";
+          if(itemType=="tanah"){
+            var totalharga = 0;
+            var pl = (parseInt(tWid)/60)*(parseInt(tHei)/40);
+            var pt = (parseInt(tHei)/40)*2.8;
+            var lt = (parseInt(tWid)/60)*2.8;
+            var luas = 2*(pl+pt+lt);
+            var semen = Math.round((luas*9.68)/50);
+            var pasir = Math.round((luas*0.045));
+            $.ajax({
+              type: 'POST',
+              url: 'getPrice.php',
+              data: 'semen='+semen+'&pasir='+pasir,
+              dataType: 'json',
+              success : function(data) {
+                if (data.status == 'ok') {
+                  $("#harga").val(data.totalHarga);
+                  $("#totalHarga").val(parseInt(hargaTanah)+parseInt(data.totalHarga));
+                  $("#ukuran").val((parseInt(tWid)/60)+" x "+(parseInt(tHei)/40));
+                }else{
+                  alert('Some problem occured, please try again.');
+                }
+              }
+            });
+            $(this)
+              .find("p")
+              .html(t);
+          } else {
+            var totalharga = $("#harga").val();
+            var pl = (parseInt(tWid)/60)*(parseInt(tHei)/40);
+            var pt = (parseInt(tHei)/40)*2.8;
+            var lt = (parseInt(tWid)/60)*2.8;
+            var luas = 2*(pl+pt+lt);
+            var semen = Math.round((luas*9.68)/50);
+            var pasir = Math.round((luas*0.045));
+            $.ajax({
+              type: 'POST',
+              url: 'getPrice.php',
+              data: 'semen='+semen+'&pasir='+pasir,
+              dataType: 'json',
+              success : function(data) {
+                if (data.status == 'ok') {
+                  $("#harga").val(parseInt(totalharga)+parseInt(data.totalHarga));
+                  $("#totalHarga").val(parseInt(hargaTanah)+parseInt(data.totalHarga));
+                }else{
+                  alert('Some problem occured, please try again.');
+                }
+              }
+            });
+          }
+        });
+      });
+    </script>
   </div>
-  <div class="col-md-1">
-    <select class="form-control" tabindex="-1" id="tingkat" name="tingkat">
-      <option value="1">1</option>
-    </select>
+  <div class="col-lg-12">
+    <br />
+    <label class="control-label">NB:</label>
+    <ul>
+      <li>Ukuran denah 6:4 secara Default Tanah dalam meter : 5 x 12</li>
+      <li>Jenis Pintu ada 2 Dorong dan tarik</li>
+      <li>Ukuran Ruangan dan kamar Mandi 4:4 secara Default Ruangan dalam meter : 4 x 4</li>
+    </ul>
+    <hr />
+    <script type="text/javascript" src="./js/html2canvas.js"></script>
+    <button id="btn-success" class="btn btn-success">Set</button>
+    <button id="btn-clear" class="btn btn-danger">Clear</button>
+    <button id="btn-exit" class="btn btn-info">Keluar</button>
+    <hr />
   </div>
-  <div class="col-md-2">
-    <button id="addTingkat" class="btn btn-block btn-info">Tambah Tingkat</button>
-  </div>
-  <div class="col-xs-2">
-    <button id="removeTingkat" class="btn btn-block btn-danger">Remove <i class="fa fa-minus"></i></button>
-  </div> -->
   <form method="post">
-    <label class="control-label">Rumah Type</label>
-    <input type="text" class="form-control" id="rumah_name" name="rumah_name" required />
-    <label class="control-label">Alamat</label>
-    <input type="text" class="form-control" id="alamat" name="alamat" required />
-    <label class="control-label">Ukuran</label>
-    <input type="text" class="form-control" id="ukuran" name="ukuran" required />
-    <label class="control-label">Harga Modal</label>
-    <input type="text" class="form-control" id="hargaJual" name="hargaJual" value=0 required />
-    <label class="control-label">Harga Semen + Pasir</label>
-    <input type="text" class="form-control" id="harga" name="harga" required />
-    <label class="control-label">Total Jual</label>
-    <input type="text" class="form-control" id="totalHarga" name="totalHarga" value=0 required />
-    <label class="form-label">Upload Design:</label>
-    <input type="file" name="photo_pict" class="filestyle" data-icon="false" accept="image/*">
-    <button type="submit" name="save" class="btn btn-primary">Save</button>           
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <label class="control-label">Rumah Type</label>
+        <input type="text" class="form-control" id="rumah_name" name="rumah_name" required />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label">Alamat</label>
+        <input type="text" class="form-control" id="alamat" name="alamat" required />
+      </div>
+      <div class="form-group col-md-3">
+        <label class="control-label">Ukuran</label>
+        <input type="text" class="form-control" id="ukuran" name="ukuran" required />
+      </div>
+      <div class="form-group col-md-3">
+        <label class="control-label">Harga Tanah</label>
+        <input type="text" class="form-control" id="hargatanah" name="hargatanah" value=0 required />
+      </div>
+      <div class="form-group col-md-3">
+        <label class="control-label">Harga Bahan</label>
+        <input type="text" class="form-control" id="harga" name="harga" required />
+      </div>
+      <div class="form-group col-md-3">
+        <label class="control-label">Total Jual</label>
+        <input type="text" class="form-control" id="totalHarga" name="totalHarga" value=0 required />
+      </div>
+      <div class="form-group col-md-6">
+        <button type="submit" name="save" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+    <div class="col-lg-12">
+      <label class="control-label">Detail Bahan</label>
+    </div>
+    <div class="col-md-3">
+      <label class="control-label">Jenis Semen</label>
+      <select class="form-control" id="jenis_semen" name="jenis_semen">
+        <option value="1" selected>Semen Tiga Roda 50kg</option>
+        <option value="2">Semen Gresik 40kg</option>
+        <option value="3">Semen Holcim 40kg</option>
+        <option value="4">Semen Holcim 50kg</option>
+        <option value="5">Semen Padang 40kg</option>
+      </select>
+      <label class="control-label">Semen</label>
+      <input type="text" class="form-control" id="qtysemen" name="qtysemen" placeholder="Jlh Semen" readonly />
+    </div>
+      <div class="col-md-3">
+      <label class="control-label">Jenis Pasir</label>
+      <select class="form-control" id="jenis_pasir" name="jenis_pasir">
+        <option value="1">Pasir Beton / M3</option>
+        <option value="2" selected>Pasir Biasa / M3</option>
+        <option value="3">Pasir Mundu / M3</option>
+      </select>
+      <label class="control-label">Pasir</label>
+      <input type="text" class="form-control" id="qtypasir" name="qtypasir" placeholder="Jlh Pasir" readonly />
+    </div>
+    <div class="col-md-3">
+      <label class="control-label">Jenis Bata</label>
+      <select class="form-control" id="jenis_bata" name="jenis_bata">
+        <option value="1" selected>Batu Bata / Biji</option>
+        <option value="2">Batu Bata Jumbo / Biji</option>
+        <option value="3">Batako / Biji</option>
+        <option value="4">Batu Kali / M3</option>
+        <option value="5">Batu Koral / M3</option>
+      </select>
+      <label class="control-label">Batu Bata</label>
+      <input type="text" class="form-control" id="qtybata" name="qtybata" placeholder="Jlh Bata" readonly />
+    </div>
+    <div class="col-md-3">
+      <label class="control-label">Jenis Bata</label>
+      <select class="form-control" id="jenis_bata" name="jenis_bata">
+        <option value="1" selected>Batu Bata / Biji</option>
+        <option value="2">Batu Bata Jumbo / Biji</option>
+        <option value="3">Batako / Biji</option>
+        <option value="4">Batu Kali / M3</option>
+        <option value="5">Batu Koral / M3</option>
+      </select>
+      <label class="control-label">Batu Bata</label>
+      <input type="text" class="form-control" id="qtybata" name="qtybata" placeholder="Jlh Bata" readonly />
+    </div>
     <?php
       $user = $_SESSION['user_name'];
       if(isset($_POST['upload'])){
@@ -213,207 +400,85 @@
       }
     ?>
   </form>
-  <div class="col-lg-12">
-    <br>
-    <label class="control-label">NB:</label>
-    <ul>
-      <li>Ukuran denah 6:4 secara Default Tanah dalam meter : 5 x 12</li>
-      <li>Jenis Pintu ada 2 Dorong dan tarik</li>
-      <li>Ukuran Ruangan dan kamar Mandi 4:4 secara Default Ruangan dalam meter : 4 x 4</li>
-    </ul>
-  </div>
-  <div class="col-lg-12">
-    <hr>
-    <table border="1">
-      </tr>
-        <th>Tools</th>
-        <th>Canvas</th>
-      </tr>
-      <tr>
-        <td class="tools">
-          <div id="draggable" class="ui-widget-content tool-master" name="tanah">
-            <p>Tanah</p>
-          </div>
-          <div id="draggable" class="ui-widget-content tool-master" name="door-pull">
-            <img src="gfx/items-door-01.png" alt="Door Tarik" width="50" height="50" />
-          </div>
-          <div id="draggable" class="ui-widget-content tool-master" name="door-push">
-            <img src="gfx/items-door-02.png" alt="Door Dorong" width="50" height="50" />
-          </div>
-          <div id="draggable" class="ui-widget-content tool-master" name="jendela-v">
-            <img src="gfx/Window_V.png" alt="Jendela Vertical" width="50" height="50" />
-          </div>
-          <div id="draggable" class="ui-widget-content tool-master" name="jendela-h">
-            <img src="gfx/Window_H.png" alt="Jendela Horizontal" width="50" height="50" />
-          </div>
-          <div id="draggable" class="ui-widget-room tool-master" name="room">
-            <p>Room</p>
-          </div>
-          <div id="draggable" class="ui-widget-wc tool-master" name="wc">
-            <p>WC</p>
-          </div>
-        </td>
-        <td id="canvas" class="canvas">
-          <div id="d1" class="dropzone">
-          </div>
-        </td>
-      </tr>
-    </table>
-    <script type="text/javascript">
-      $(document).on("mouseover","div.item-child", function(event){
-        var itemType = $(this).attr("name");
-        $(this).draggable({
-          cursor: "move",
-          containment: ".dropzone"
+  <!-- <label class="control-label">Batu Bata</label>
+  <input type="text" class="form-control" id="qty" name="qty" readonly /> -->
+  <script>
+    $('#btn-success').click(function(){
+      var filename = $("#rumah_name").val();
+      if(filename==null){
+        alert("Isi tipe rumah terlebih dahulu !"+filename);
+      } else {
+        html2canvas(document.querySelector('#canvas')).then(function(canvas) {
+        console.log(canvas);
+        saveAs(canvas.toDataURL(), filename+'.png');
         });
-        $(this).resizable({
-          grid: 1,
-          containment: ".dropzone"
-        });
-        $(this).resize(function() {
-          var tWid = parseInt($(this).css("width"));
-          var tHei = parseInt($(this).css("height"));
-          var hargaJual = $("#hargaJual").val();
-          var t = "P:"+(tHei/40).toFixed(1)+"m <br />L:"+(tWid/60).toFixed(1)+"m";
-          if(itemType=="tanah"){
-            var totalharga = 0;
-            var pl = (parseInt(tWid)/60)*(parseInt(tHei)/40);
-            var pt = (parseInt(tHei)/40)*2.8;
-            var lt = (parseInt(tWid)/60)*2.8;
-            var luas = 2*(pl+pt+lt);
-            var semen = Math.round((luas*9.68)/50);
-            var pasir = Math.round((luas*0.045));
-            $.ajax({
-              type: 'POST',
-              url: 'getPrice.php',
-              data: 'semen='+semen+'&pasir='+pasir,
-              dataType: 'json',
-              success : function(data) {
-                if (data.status == 'ok') {
-                  $("#harga").val(data.totalHarga);
-                  $("#totalHarga").val(parseInt(hargaJual)+parseInt(data.totalHarga));
-                  $("#ukuran").val((parseInt(tWid)/60)+" x "+(parseInt(tHei)/40));
-                }else{
-                  alert('Some problem occured, please try again.');
-                }
-              }
-            });
-            $(this)
-              .find("p")
-              .html(t);
-          } else {
-            var totalharga = $("#harga").val();
-            var pl = (parseInt(tWid)/60)*(parseInt(tHei)/40);
-            var pt = (parseInt(tHei)/40)*2.8;
-            var lt = (parseInt(tWid)/60)*2.8;
-            var luas = 2*(pl+pt+lt);
-            var semen = Math.round((luas*9.68)/50);
-            var pasir = Math.round((luas*0.045));
-            $.ajax({
-              type: 'POST',
-              url: 'getPrice.php',
-              data: 'semen='+semen+'&pasir='+pasir,
-              dataType: 'json',
-              success : function(data) {
-                if (data.status == 'ok') {
-                  $("#harga").val(parseInt(totalharga)+parseInt(data.totalHarga));
-                  $("#totalHarga").val(parseInt(hargaJual)+parseInt(data.totalHarga));
-                }else{
-                  alert('Some problem occured, please try again.');
-                }
-              }
-            });
-          }
-        });
-      });
-      $(document).on("click","div.item-child", function(event){
-        $(this).addEventListener('keydown', function (event) {
-          if (event.keyCode == 8) {
-              console.log('BACKSPACE was pressed');
-
-              // Call event.preventDefault() to stop the character before the cursor
-              // from being deleted. Remove this line if you don't want to do that.
-              event.preventDefault();
-          }
-          if (event.keyCode == 46) {
-              console.log('DELETE was pressed');
-
-              // Call event.preventDefault() to stop the character after the cursor
-              // from being deleted. Remove this line if you don't want to do that.
-              event.preventDefault();
-          }
-        });
-      });
-    </script>
-    <hr>
-    <script type="text/javascript" src="./js/html2canvas.js"></script>
-    <button id="btn-success" class="btn btn-success">Set</button>
-    <button id="btn-clear" class="btn btn-danger">Clear</button>
-    <button id="btn-exit" class="btn btn-info">Keluar</button>
-    <script>
-      $('#btn-success').click(function(){
-        var filename = $("#rumah_name").val();
-        if(filename==null){
-          alert("Isi tipe rumah terlebih dahulu !"+filename);
-        } else {
-          html2canvas(document.querySelector('#canvas')).then(function(canvas) {
-          console.log(canvas);
-          saveAs(canvas.toDataURL(), filename+'.png');
-          });
-        }
-      });
-      function saveAs(uri, filename) {
-        var link = document.createElement('a');
-        if (typeof link.download === 'string') {
-            link.href = uri;
-            link.download = filename;
-            //Firefox requires the link to be in the body
-            document.body.appendChild(link);
-            //simulate click
-            link.click();
-            //remove the link when done
-            document.body.removeChild(link);
-        } else {
-            window.open(uri);
-        }
       }
-    </script>
-    <script>
-      $("#btn-clear").click(function() {
-        $( ".dropzone" ).html("");
+    });
+    function saveAs(uri, filename) {
+      var link = document.createElement('a');
+      if (typeof link.download === 'string') {
+          link.href = uri;
+          link.download = filename;
+          //Firefox requires the link to be in the body
+          document.body.appendChild(link);
+          //simulate click
+          link.click();
+          //remove the link when done
+          document.body.removeChild(link);
+      } else {
+          window.open(uri);
+      }
+    }
+  </script>
+  <script>
+    $("#btn-clear").click(function() {
+      $( ".dropzone" ).html("");
+    });
+    $("#btn-exit").click(function() {
+      window.location = "./index.php";
+    });
+    /* $("#addTingkat").click(function(event){
+      var tingkat = [];
+      $("#tingkat option").each(function()
+      {
+        tingkat.push($(this).val());
       });
-      $("#btn-exit").click(function() {
-        window.location = "../index.php";
+      var addNew = tingkat.length + 1;
+      $("#tingkat").append("<option value='"+addNew+"'>"+addNew+"</option>");
+      $("#tingkat").val(addNew);
+      $(".canvas").append('<div id="d'+addNew+'" class="dropzone"></div>');
+    });
+    $("#removeTingkat").click(function(event){
+      var tingkat = [];
+      $("#tingkat option").each(function()
+      {
+        tingkat.push($(this).val());
       });
-      /* $("#addTingkat").click(function(event){
-        var tingkat = [];
-        $("#tingkat option").each(function()
-        {
-          tingkat.push($(this).val());
-        });
-        var addNew = tingkat.length + 1;
-        $("#tingkat").append("<option value='"+addNew+"'>"+addNew+"</option>");
-        $("#tingkat").val(addNew);
-        $(".canvas").append('<div id="d'+addNew+'" class="dropzone"></div>');
-      });
-      $("#removeTingkat").click(function(event){
-        var tingkat = [];
-        $("#tingkat option").each(function()
-        {
-          tingkat.push($(this).val());
-        });
-        var selected = $("#tingkat").val();
-        var end = tingkat.length;
-        if(selected==end){
-          $("#tingkat").children('option:selected').remove();
-          tingkat.pop();
-          $("#tingkat").val(tingkat.length);
-          $("#d"+selected).remove();
-        } else {
-          alert("Buang dari tingkat paling tinggi !");
-        }
-      }); */
-    </script>
+      var selected = $("#tingkat").val();
+      var end = tingkat.length;
+      if(selected==end){
+        $("#tingkat").children('option:selected').remove();
+        tingkat.pop();
+        $("#tingkat").val(tingkat.length);
+        $("#d"+selected).remove();
+      } else {
+        alert("Buang dari tingkat paling tinggi !");
+      }
+    }); */
+  </script>
+  <!-- <div class="col-md-2">
+    <label class="control-label">Jumlah Tingkat</label>
   </div>
+  <div class="col-md-1">
+    <select class="form-control" tabindex="-1" id="tingkat" name="tingkat">
+      <option value="1">1</option>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <button id="addTingkat" class="btn btn-block btn-info">Tambah Tingkat</button>
+  </div>
+  <div class="col-xs-2">
+    <button id="removeTingkat" class="btn btn-block btn-danger">Remove <i class="fa fa-minus"></i></button>
+  </div> -->
 </body>
 </html>

@@ -76,65 +76,22 @@
     <div class="gallery" id="design">
       <div class="container">
         <div class="wthree-tittle">
-            <h3 class="agile_title one">Daftar Rumah</h3>
+            <h3 class="agile_title one">Buat Baru</h3>
           <p class="w3l-agile-its-title">Rancang rumah anda</p>
         </div>
-        <?php
-          $kns = new DB_con();
-          $query = "SELECT * FROM tbl_rumah
-                    WHERE user_id=".$_SESSION['user_id']."";
-          //echo $query;
-          $result = $kns->OpenCon()->query($query);
-          if($result->num_rows==0){
-            echo "
-              <p>Kamu belum ada rancangan rumah buat baru ?</p>
-              <a href='./create.php' class='btn btn-info btn-lg'><i class='fa fa-plus-circle></i> Tambah Baru'</a>
-            ";
-          } else {
-            echo "<a href='./create.php' class='btn btn-info btn-lg'><i class='fa fa-plus-circle'></i> Tambah Baru</a>";
-            while($data = $result->fetch_array(MYSQLI_ASSOC)){
-              echo "
-              <table class='table table-hover'>
-                <thead>
-                  <tr>
-                    <th>Tipe Rumah</th>
-                    <th>Tingkat</th>
-                    <th>Ukuran</th>
-                    <th>Harga</th>
-                    <th>Alamat</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>".$data['rumah_name']."</td>
-                    <td>".$data['jenis']."</td>
-                    <td>".$data['ukuran']."</td>
-                    <td>".$data['harga']."</td>
-                    <td>".$data['alamat']."</td>
-                    <td>
-                      <a href=\"javascript:void(0)\" data-id=\"".$data['rumah_id']."\" name=\"accept\" onclick=\"accept(".$data['rumah_id'].")\" class=\"btn btn-info\" title=\"Accept\">
-                          <i class=\"fa fa-edit\"></i>
-                      </a>
-                      <a href=\"javascript:void(0)\" data-id=\"".$data['rumah_id']."\" name=\"delete\" onclick=\"remove(".$data['rumah_id'].")\" class=\"btn btn-danger\" title=\"Remove\">
-                          <i class=\"fa fa-trash-o\"></i>
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>";
-            }
-          }
-        ?>
+        <form method="post">
+          <div class="form-group">
+            <label class="control-label"></label>
+            <input type="text" class="form-control" id="" name="" required />
+          </div>
+          <div class="form-group">
+            <label class="control-label"></label>
+            <input type="text" class="form-control" id="" name="" required />
+          </div>
+        </form>
       </div>
     </div>
     <script>
-      function accept(id){
-        alert("You accept "+id);
-      }
-      function remove(id){
-        alert("You remove "+id);
-      }
     </script>
     <!-- <script src="../js/jquery-2.2.3.min.js"></script> -->
     <!-- Stats-Number-Scroller-Animation-JavaScript -->
