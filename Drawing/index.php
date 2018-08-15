@@ -88,8 +88,9 @@
           if($result->num_rows==0){
             echo "
               <p>Kamu belum ada rancangan rumah buat baru ?</p>
-              <a href='./create.php' class='btn btn-info btn-lg'><i class='fa fa-plus-circle></i> Tambah Baru'</a>
             ";
+            echo "<a href='./create.php' class='btn btn-info btn-lg'><i class='fa fa-plus-circle'></i> Tambah Baru</a>";
+            //echo "<a href='javascript:void(0)' class='btn btn-info btn-lg' data-toggle=\"modal\" data-target=\"#new-modal\"><i class='fa fa-plus-circle'></i> Tambah Baru</a>";
           } else {
             echo "<a href='./create.php' class='btn btn-info btn-lg'><i class='fa fa-plus-circle'></i> Tambah Baru</a>";
             while($data = $result->fetch_array(MYSQLI_ASSOC)){
@@ -129,6 +130,7 @@
         ?>
       </div>
     </div>
+
     <!-- View Modal -->
       <div class="modal fade" id="view-modal">
         <div class="modal-dialog">
@@ -143,9 +145,10 @@
             
             <!-- Modal body -->
             <div class="modal-body">
+              <input type="hidden" id="rumah_id" name="rumah_id" value="" />
               <div class="form-group">
                 <center>
-                  <img class="img-fluid" name="profil" id="profil" src="<?php echo $path; ?>" alt="User Pict" height="500" width="300">
+                  <img class="img-fluid" name="profil" id="profil" src="../images/no_image.png" alt="User Pict" height="300" width="300">
                 </center>
                 <label class="form-label">Upload Foto:</label>
                 <input type="file" name="photo_pict" class="filestyle" data-icon="false" accept="image/*">
@@ -215,12 +218,12 @@
                   }
                   else{
                     $kns = new DB_con();
-                    $query = "INSERT INTO tbl_rumah (rumah_name,jenis,ukuran,harga,alamat,rumah_photo,rumah_description,rumah_sketch) VALUES('$rumah_name',1,'$ukuran',$totalHarga,'$alamat',NULL,'','images/Home/$name')";
+                    $query = "UPDATE tbl_rumah alamat='$alamat',harga='$harga',rumah_description='$deskripsi',rumah_photo='images/Home/$name' WHERE";
                     $hasil = $kns->OpenCon()->query($query) or die($kns->OpenCon()->error);
                     if($hasil){
                       //echo '<div class="alert alert-success">File berhasil di upload.</div>';
                       echo "<script type='text/javascript'>
-                            alert(Rumah baru sudah di tambahkan');
+                            alert(Rumah baru sudah di update');
                             window.location='index.php';
                             </script>";
                     }else{
@@ -239,6 +242,7 @@
         </div>
       </div>
     <!-- End View Modal -->
+
     <script>
       function accept(id){
         $.ajax({
@@ -248,6 +252,7 @@
           dataType: 'json',
           success : function(data) {
             if (data.status == 'ok') {
+              $('#rumah_id').val(data.rumah_id);
               $('#rumah_name').html("<h4>"+data.rumah_name+"</h4>");
               $('#alamat').val(data.alamat);
               $('#ukuran').val(data.ukuran);

@@ -2,6 +2,12 @@
   session_start();
   include('../config.php');
 
+  if(isset($_POST['save'])){
+    echo "<script type='text/javascript'>
+    alert(Rumah baru sudah di update');
+    window.location='index.php';
+    </script>";
+  }
 ?>
 <!doctype html>
 <html lang="en">
@@ -336,31 +342,33 @@
     <hr />
   </div>
   <?php
-    $rumahID = $_GET['rumah_id'];
-    $userID = $_SESSION['user_id'];
-
-    $kns = new DB_con();
-    $query="SELECT rumah_name,jenis,ukuran,harga,
-    CASE WHEN alamat IS NULL THEN '' ELSE alamat END alamat,
-    CASE WHEN rumah_photo IS NULL THEN '../images/no_image.png' ELSE rumah_photo END rumah_photo,
-    CASE WHEN rumah_description IS NULL THEN '' ELSE rumah_description END rumah_description FROM tbl_rumah WHERE rumah_id=$rumahID AND user_id=$userID";
-    //echo $query;
-    $result = $kns->OpenCon()->query($query);
-    $item = $result->fetch_assoc();
+    if(isset($_GET['rumah_id'])){
+      $rumahID = $_GET['rumah_id'];
+      $userID = $_SESSION['user_id'];
+  
+      $kns = new DB_con();
+      $query="SELECT rumah_name,jenis,ukuran,harga,
+      CASE WHEN alamat IS NULL THEN '' ELSE alamat END alamat,
+      CASE WHEN rumah_photo IS NULL THEN '../images/no_image.png' ELSE rumah_photo END rumah_photo,
+      CASE WHEN rumah_description IS NULL THEN '' ELSE rumah_description END rumah_description FROM tbl_rumah WHERE rumah_id=$rumahID AND user_id=$userID";
+      //echo $query;
+      $result = $kns->OpenCon()->query($query);
+      $item = $result->fetch_assoc();
+    }
   ?>
-  <form method="post">
+  <form method="post" name="form">
     <div class="form-row">
       <div class="form-group col-md-3">
         <label class="control-label">Rumah Type</label>
-        <input type="text" class="form-control" id="rumah_name" name="rumah_name" readonly value="<?php echo $item['rumah_name']; ?>" />
+        <input type="text" class="form-control" id="rumah_name" name="rumah_name" <?php if(isset($_GET['rumah_id'])){ echo "readonly value=\"".$item['rumah_name']."\""; } ?> />
       </div>
       <div class="form-group col-md-6">
         <label class="control-label">Alamat</label>
-        <input type="text" class="form-control" id="alamat" name="alamat" required value="<?php echo $item['alamat']; ?>" />
+        <input type="text" class="form-control" id="alamat" name="alamat" required value="<?php if(isset($_GET['rumah_id'])){ echo $item['alamat']; } ?>" />
       </div>
       <div class="form-group col-md-3">
         <label class="control-label">Ukuran</label>
-        <input type="text" class="form-control" id="ukuran" name="ukuran" readonly value="<?php echo $item['ukuran']; ?>" />
+        <input type="text" class="form-control" id="ukuran" name="ukuran" readonly value="<?php if(isset($_GET['rumah_id'])){ echo $item['ukuran']; } ?>" />
       </div>
       <div class="form-group col-md-3">
         <label class="control-label">Harga Tanah</label>
@@ -372,10 +380,10 @@
       </div>
       <div class="form-group col-md-3">
         <label class="control-label">Total Jual</label>
-        <input type="text" class="form-control" id="totalHarga" name="totalHarga" required value="<?php echo number_format($item['harga'],0,",","."); ?>" />
+        <input type="text" class="form-control" id="totalHarga" name="totalHarga" required value="<?php if(isset($_GET['rumah_id'])){ echo number_format($item['harga'],0,",","."); } ?>" />
       </div>
       <div class="form-group col-md-6">
-        <button type="submit" name="save" class="btn btn-primary">Save</button>
+        <button type="submit" name="save" id="save" class="btn btn-primary">Save</button>
       </div>
     </div>
     <div class="col-lg-12">
