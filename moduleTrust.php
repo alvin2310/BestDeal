@@ -28,31 +28,46 @@ class Module{
         }
       //End User
         $tblUser = array();
+        $query1 = "SELECT *
+                  FROM tbl_users A
+                  WHERE A.user_id<>12
+                  AND ((user_earn-user_spent)>".$thisUser[0]['selisih']." 
+                  OR (simpanan*0.2)>(".$thisUser[0]['simpanan']."*0.2))
+                  AND A.user_earn<>0 AND A.user_spent<>0
+                  LIMIT 3";
+        $hasil = $kns->OpenCon()->query($query1);
+        while ($data=mysqli_fetch_assoc($hasil)) {
+          $item=array(
+            "user_id" => $data['user_id'],
+            "user_name" => $data['user_name'],
+            "user_earn" => $data['user_earn'],
+            "user_spent" => $data['user_spent'],
+            "selisih" => $data['user_earn']-$data['user_spent'],
+            "simpanan" => $data['simpanan']
+          );
+          array_push($tblUser,$item);
+        }
         $query = "SELECT *
                   FROM tbl_users A
-                  WHERE A.user_id<>$user_id
-                  AND ((user_earn-user_spent)>".$thisUser[0]['selisih']."
-                  OR simpanan>".$thisUser[0]['selisih'].")
+                  WHERE A.user_id<>12
+                  AND ((user_earn-user_spent)<".$thisUser[0]['selisih']." 
+                  OR (simpanan*0.2)<(".$thisUser[0]['simpanan']."*0.2))
                   AND A.user_earn<>0 AND A.user_spent<>0
-                  LIMIT 4";
+                  LIMIT 1";
         //echo $query;
         $hasil = $kns->OpenCon()->query($query);
-        if(mysqli_num_rows($hasil)<1){
-          echo "Tidak ada Data Hasil";
+        while ($data=mysqli_fetch_assoc($hasil)) {
+          $item=array(
+            "user_id" => $data['user_id'],
+            "user_name" => $data['user_name'],
+            "user_earn" => $data['user_earn'],
+            "user_spent" => $data['user_spent'],
+            "selisih" => $data['user_earn']-$data['user_spent'],
+            "simpanan" => $data['simpanan']
+          );
+          array_push($tblUser,$item);
         }
-        else{
-          while ($data=mysqli_fetch_assoc($hasil)) {
-            $item=array(
-              "user_id" => $data['user_id'],
-              "user_name" => $data['user_name'],
-              "user_earn" => $data['user_earn'],
-              "user_spent" => $data['user_spent'],
-              "selisih" => $data['user_earn']-$data['user_spent'],
-              "simpanan" => $data['simpanan']
-            );
-            array_push($tblUser,$item);
-          }
-        }
+        //echo "<pre>"; print_r($tblUser); echo "</pre>";
     //End Data
     
     //Find X
