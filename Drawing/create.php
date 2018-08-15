@@ -150,9 +150,9 @@
           var old_2 = parseInt($("#qtypasir").val());
           var old_3 = parseInt($("#qtybata").val());
 
-          $("#qtysemen").val(parseInt(semen));
-          $("#qtypasir").val(parseInt(pasir));
-          $("#qtybata").val(parseInt(jlhBata));
+          $("#qtysemen").val(parseInt(old_1)+parseInt(semen));
+          $("#qtypasir").val(parseInt(old_2)+parseInt(pasir));
+          $("#qtybata").val(parseInt(old_3)+parseInt(jlhBata));
 
           $.ajax({
             type: 'POST',
@@ -249,6 +249,9 @@
             if(jenis3=="4" || jenis3=="5"){
               jlhBata = Math.round(luas*0.045);
             }
+
+            var hargaTanah = ((tHei/40)*(tWid/60)) * 1000000;
+            $("#hargatanah").val(hargaTanah);
 
             var old_1 = $("#qtysemen").val();
             var old_2 = $("#qtypasir").val();
