@@ -257,6 +257,7 @@
             $("#qtypasir").val(parseInt(pasir));
             $("#qtybata").val(parseInt(jlhBata));
 
+            var old_harga = $("#totalHarga").val();
             $.ajax({
               type: 'POST',
               url: 'getPrice.php',
@@ -264,7 +265,7 @@
               dataType: 'json',
               success : function(data) {
                 if (data.status == 'ok') {
-                  $("#harga").val(parseInt(totalharga)+parseInt(data.totalHarga));
+                  $("#harga").val(parseInt(old_harga)-parseInt(totalharga)+parseInt(data.totalHarga));
                   var grandTotal = parseInt($("#harga").val()) + parseInt(hargaTanah);
                   $("#totalHarga").val(grandTotal);
                   $("#ukuran").val((parseInt(tWid)/60)+" x "+(parseInt(tHei)/40));
@@ -302,11 +303,12 @@
             var old_1 = $("#qtysemen").val();
             var old_2 = $("#qtypasir").val();
             var old_3 = $("#qtybata").val();
-            
+
             $("#qtysemen").val(parseInt(semen));
             $("#qtypasir").val(parseInt(pasir));
             $("#qtybata").val(parseInt(jlhBata));
             
+            var old_harga = $("#totalHarga").val();
             $.ajax({
               type: 'POST',
               url: 'getPrice.php',
@@ -314,7 +316,7 @@
               dataType: 'json',
               success : function(data) {
                 if (data.status == 'ok') {
-                  $("#harga").val(parseInt(totalharga)+parseInt(data.totalHarga));
+                  $("#harga").val(parseInt(old_harga)-parseInt(totalharga)+parseInt(data.totalHarga));
                   var grandTotal = parseInt($("#harga").val()) + parseInt(hargaTanah);
                   $("#totalHarga").val(grandTotal);
                 }else{
