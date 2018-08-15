@@ -150,9 +150,9 @@
           var old_2 = parseInt($("#qtypasir").val());
           var old_3 = parseInt($("#qtybata").val());
 
-          $("#qtysemen").val(old_1+parseInt(semen));
-          $("#qtypasir").val(old_2+parseInt(pasir));
-          $("#qtybata").val(old_3+parseInt(jlhBata));
+          $("#qtysemen").val(parseInt(semen));
+          $("#qtypasir").val(parseInt(pasir));
+          $("#qtybata").val(parseInt(jlhBata));
 
           $.ajax({
             type: 'POST',
@@ -253,9 +253,9 @@
             var old_1 = $("#qtysemen").val();
             var old_2 = $("#qtypasir").val();
             var old_3 = $("#qtybata").val();
-            $("#qtysemen").val(parseInt(old_1)+parseInt(semen));
-            $("#qtypasir").val(parseInt(old_2)+parseInt(pasir));
-            $("#qtybata").val(parseInt(old_3)+parseInt(jlhBata));
+            $("#qtysemen").val(parseInt(semen));
+            $("#qtypasir").val(parseInt(pasir));
+            $("#qtybata").val(parseInt(jlhBata));
 
             $.ajax({
               type: 'POST',
@@ -268,7 +268,7 @@
                   var grandTotal = parseInt($("#harga").val()) + parseInt(hargaTanah);
                   $("#totalHarga").val(grandTotal);
                   $("#ukuran").val((parseInt(tWid)/60)+" x "+(parseInt(tHei)/40));
-                }else{
+                } else{
                   alert('Some problem occured, please try again.');
                 }
               }
@@ -302,9 +302,10 @@
             var old_1 = $("#qtysemen").val();
             var old_2 = $("#qtypasir").val();
             var old_3 = $("#qtybata").val();
-            $("#qtysemen").val(parseInt(old_1)+parseInt(semen));
-            $("#qtypasir").val(parseInt(old_2)+parseInt(pasir));
-            $("#qtybata").val(parseInt(old_3)+parseInt(jlhBata));
+            
+            $("#qtysemen").val(parseInt(semen));
+            $("#qtypasir").val(parseInt(pasir));
+            $("#qtybata").val(parseInt(jlhBata));
             
             $.ajax({
               type: 'POST',
@@ -401,7 +402,7 @@
       <label class="control-label">Semen</label>
       <input type="text" class="form-control" id="qtysemen" name="qtysemen" placeholder="Jlh Semen" value=0 readonly />
     </div>
-      <div class="col-md-3">
+    <div class="col-md-3">
       <label class="control-label">Jenis Pasir</label>
       <select class="form-control" id="jenis_pasir" name="jenis_pasir">
         <option value="23">Pasir Beton / M3</option>
@@ -453,8 +454,90 @@
     }
   </script>
   <script>
+    $("#jenis_semen").change(function(){
+      var jenis1 = $("#jenis_semen").val();
+      var jenis2 = $("#jenis_pasir").val();
+      var jenis3 = $("#jenis_bata").val();
+
+      var semen = $("#qtysemen").val();
+      var pasir = $("#qtypasir").val();
+      var jlhBata = $("#qtybata").val();
+      var hargaTanah = $("#hargatanah").val();
+      $.ajax({
+        type: 'POST',
+        url: 'getPrice.php',
+        data: 'jenis_1='+jenis1+'&semen='+semen+'&jenis_2='+jenis2+'&pasir='+pasir+'&jenis_3='+jenis3+'&bata='+jlhBata,
+        dataType: 'json',
+        success : function(data) {
+          if (data.status == 'ok') {
+            $("#harga").val(parseInt(data.totalHarga));
+            var grandTotal = parseInt($("#harga").val()) + parseInt(hargaTanah);
+            $("#totalHarga").val(grandTotal);
+          }else{
+            alert('Some problem occured, please try again.');
+          }
+        }
+      });
+    });
+    $("#jenis_pasir").change(function(){
+      var jenis1 = $("#jenis_semen").val();
+      var jenis2 = $("#jenis_pasir").val();
+      var jenis3 = $("#jenis_bata").val();
+
+      var semen = $("#qtysemen").val();
+      var pasir = $("#qtypasir").val();
+      var jlhBata = $("#qtybata").val();
+      var hargaTanah = $("#hargatanah").val();
+      $.ajax({
+        type: 'POST',
+        url: 'getPrice.php',
+        data: 'jenis_1='+jenis1+'&semen='+semen+'&jenis_2='+jenis2+'&pasir='+pasir+'&jenis_3='+jenis3+'&bata='+jlhBata,
+        dataType: 'json',
+        success : function(data) {
+          if (data.status == 'ok') {
+            $("#harga").val(parseInt(data.totalHarga));
+            var grandTotal = parseInt($("#harga").val()) + parseInt(hargaTanah);
+            $("#totalHarga").val(grandTotal);
+          }else{
+            alert('Some problem occured, please try again.');
+          }
+        }
+      });
+    });
+    $("#jenis_bata").change(function(){
+      var jenis1 = $("#jenis_semen").val();
+      var jenis2 = $("#jenis_pasir").val();
+      var jenis3 = $("#jenis_bata").val();
+
+      var semen = $("#qtysemen").val();
+      var pasir = $("#qtypasir").val();
+      var jlhBata = $("#qtybata").val();
+      var hargaTanah = $("#hargatanah").val();
+      $.ajax({
+        type: 'POST',
+        url: 'getPrice.php',
+        data: 'jenis_1='+jenis1+'&semen='+semen+'&jenis_2='+jenis2+'&pasir='+pasir+'&jenis_3='+jenis3+'&bata='+jlhBata,
+        dataType: 'json',
+        success : function(data) {
+          if (data.status == 'ok') {
+            $("#harga").val(parseInt(data.totalHarga));
+            var grandTotal = parseInt($("#harga").val()) + parseInt(hargaTanah);
+            $("#totalHarga").val(grandTotal);
+          }else{
+            alert('Some problem occured, please try again.');
+          }
+        }
+      });
+    });
     $("#btn-clear").click(function() {
       $( ".dropzone" ).html("");
+      $("#hargatanah").val(0);
+      $("#harga").val(0);
+      $("#totalHarga").val(0);
+
+      $("#qtysemen").val(0);
+      $("#qtypasir").val(0);
+      $("#qtybata").val(0);
     });
     $("#btn-exit").click(function() {
       window.location = "./index.php";
