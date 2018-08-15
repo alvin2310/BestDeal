@@ -1,12 +1,23 @@
 <?php
   session_start();
   include('../config.php');
+  include_once './auth.php';
+  $user = new Auth();
 
-  if(isset($_POST['save'])){
-    echo "<script type='text/javascript'>
-    alert(Rumah baru sudah di update');
-    window.location='index.php';
-    </script>";
+  if (isset($_POST['save'])) {
+    extract($_POST);
+    $rmID = isset($_GET['rumah_id']) ? $_GET['rumah_id'] : 0;
+    $uid = $_SESSION['user_id'];
+    $create = $user->saveRumah($rmID,$rumah_name,$alamat,$ukuran,$harga,$qtysemen,$qtypasir,$qtybata,$uid);
+		if ($create) {
+        echo "<script type='text/javascript'>
+          alert('Data telah terupdate !');
+          window.location = './index.php';
+        </script>";
+				//header("Location: ../index.php");
+		} else {
+				echo "<script>alert('Something Wrong / ID / Username already exists');</script>";
+		}
   }
 ?>
 <!doctype html>
