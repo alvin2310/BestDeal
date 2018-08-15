@@ -410,6 +410,9 @@
 .fa-tint:before {
   content: "\f043";
 }
+.fa-paint-brush:before{
+  content:"\f1fc";
+}
 .fa-edit:before,
 .fa-pencil-square-o:before {
   content: "\f044";

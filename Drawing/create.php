@@ -66,7 +66,6 @@
         accept: ".tool-master",
         drop: function( event, ui ) {
           var $item = ui.draggable.clone();
-
           var itemType = $item.find("p").text();
           //alert("Jenis Barang " + itemType);
           if(itemType=="Tanah"){
@@ -79,7 +78,10 @@
             var tHei = parseInt($item.height());
             var t = "P:"+(tHei/40)+"m <br />L:"+(tWid/60)+"m";
             var hargaTanah = ((tHei/40)*(tWid/60)) * 1000000; //$("#hargatanah").val();
+            tWid = tWid/60;
+            tHei = tHei/40;
             $("#hargatanah").val(hargaTanah);
+            $("#ukuran").val((parseInt(tWid))+" x "+(parseInt(tHei)));
             $item
               .find("p")
               .html(t);
@@ -89,10 +91,18 @@
             $item.removeClass("tool-master");
             $item.attr("id",itemType);
             $item.css("z-index",3);
+            var tWid = parseInt($item.width());
+            var tHei = parseInt($item.height());
+            tWid = tWid/40;
+            tHei = tHei/40;
           } else {
             $item.removeClass("ui-widget-content tool-master");
             $item.attr("id",itemType);
             $item.css("z-index",4);
+            var tWid = parseInt($item.width());
+            var tHei = parseInt($item.height());
+            tWid = tWid/40;
+            tHei = tHei/40;
           }
           $item.addClass("item-child");
 
@@ -108,25 +118,46 @@
             //alert("The Top is "+(parseInt($item.css('top'))+selisih));
             $item.css("top",(parseInt($item.css('top'))+selisih) );
           }
+          var totalharga = $("#harga").val();
           var hargaTanah = $("#hargatanah").val();
-          var pl = (parseInt(300)/60)*(parseInt(480)/40);
-          var pt = (parseInt(480)/40)*2.8;
-          var lt = (parseInt(300)/60)*2.8;
+          var pl = (tWid)*(tHei);
+          var pt = (tHei)*2.8;
+          var lt = (tWid)*2.8;
           var luas = 2*(pl+pt+lt);
           var semen = Math.round((luas*9.68));
           var pasir = Math.round((luas*0.045));
-          var jlhBata = luas * 36;
-          $("#qtybata").val(jlhBata)
+          var jlhBata = Math.round(luas * 36);
+          var jenis1 = $("#jenis_semen").val();
+          var jenis2 = $("#jenis_pasir").val();
+          var jenis3 = $("#jenis_bata").val();
+
+          if(jenis1=="1" || jenis1=="4"){
+            semen = Math.round(semen/50);
+          } else {
+            semen = Math.round(semen/40);
+          }
+          if(jenis3=="4" || jenis3=="5"){
+            jlhBata = Math.round(luas*0.045);
+          }
+
+          var old_1 = parseInt($("#qtysemen").val());
+          var old_2 = parseInt($("#qtypasir").val());
+          var old_3 = parseInt($("#qtybata").val());
+
+          $("#qtysemen").val(old_1+parseInt(semen));
+          $("#qtypasir").val(old_2+parseInt(pasir));
+          $("#qtybata").val(old_3+parseInt(jlhBata));
+
           $.ajax({
             type: 'POST',
             url: 'getPrice.php',
-            data: 'semen='+semen+'&pasir='+pasir,
+            data: 'jenis_1='+jenis1+'&semen='+semen+'&jenis_2='+jenis2+'&pasir='+pasir+'&jenis_3='+jenis3+'&bata='+jlhBata,
             dataType: 'json',
             success : function(data) {
               if (data.status == 'ok') {
-                $("#harga").val(data.totalHarga);
-                $("#totalHarga").val(parseInt(hargaTanah)+parseInt(data.totalHarga));
-                $("#ukuran").val((parseInt(300)/60)+" x "+(parseInt(480)/40));
+                $("#harga").val(parseInt(totalharga)+parseInt(data.totalHarga));
+                  var grandTotal = parseInt($("#harga").val()) + parseInt(hargaTanah);
+                  $("#totalHarga").val(grandTotal);
               }else{
                 alert('Some problem occured, please try again.');
               }
@@ -191,22 +222,45 @@
           var hargaTanah = $("#hargatanah").val();
           var t = "P:"+(tHei/40).toFixed(1)+"m <br />L:"+(tWid/60).toFixed(1)+"m";
           if(itemType=="tanah"){
-            var totalharga = 0;
-            var pl = (parseInt(tWid)/60)*(parseInt(tHei)/40);
-            var pt = (parseInt(tHei)/40)*2.8;
-            var lt = (parseInt(tWid)/60)*2.8;
+            var totalharga = $("#harga").val();
+            var pl = (tWid/60)*(tHei/40);
+            var pt = (tHei/40)*2.8;
+            var lt = (tWid/60)*2.8;
             var luas = 2*(pl+pt+lt);
-            var semen = Math.round((luas*9.68)/50);
+            var jenis1 = $("#jenis_semen").val();
+            var jenis2 = $("#jenis_pasir").val();
+            var jenis3 = $("#jenis_bata").val();
+
+            var semen = luas*9.68;
             var pasir = Math.round((luas*0.045));
+            var jlhBata = Math.round(luas * 36);
+
+            if(jenis1=="1" || jenis1=="4"){
+              semen = Math.round(semen/50);
+            } else {
+              semen = Math.round(semen/40);
+            }
+            if(jenis3=="4" || jenis3=="5"){
+              jlhBata = Math.round(luas*0.045);
+            }
+
+            var old_1 = $("#qtysemen").val();
+            var old_2 = $("#qtypasir").val();
+            var old_3 = $("#qtybata").val();
+            $("#qtysemen").val(parseInt(old_1)+parseInt(semen));
+            $("#qtypasir").val(parseInt(old_2)+parseInt(pasir));
+            $("#qtybata").val(parseInt(old_3)+parseInt(jlhBata));
+
             $.ajax({
               type: 'POST',
               url: 'getPrice.php',
-              data: 'semen='+semen+'&pasir='+pasir,
+              data: 'jenis_1='+jenis1+'&semen='+semen+'&jenis_2='+jenis2+'&pasir='+pasir+'&jenis_3='+jenis3+'&bata='+jlhBata,
               dataType: 'json',
               success : function(data) {
                 if (data.status == 'ok') {
-                  $("#harga").val(data.totalHarga);
-                  $("#totalHarga").val(parseInt(hargaTanah)+parseInt(data.totalHarga));
+                  $("#harga").val(parseInt(totalharga)+parseInt(data.totalHarga));
+                  var grandTotal = parseInt($("#harga").val()) + parseInt(hargaTanah);
+                  $("#totalHarga").val(grandTotal);
                   $("#ukuran").val((parseInt(tWid)/60)+" x "+(parseInt(tHei)/40));
                 }else{
                   alert('Some problem occured, please try again.');
@@ -218,21 +272,44 @@
               .html(t);
           } else {
             var totalharga = $("#harga").val();
-            var pl = (parseInt(tWid)/60)*(parseInt(tHei)/40);
-            var pt = (parseInt(tHei)/40)*2.8;
-            var lt = (parseInt(tWid)/60)*2.8;
+            var pl = (tWid/40)*(tHei/40);
+            var pt = (tHei/40)*2.8;
+            var lt = (tWid/40)*2.8;
             var luas = 2*(pl+pt+lt);
-            var semen = Math.round((luas*9.68)/50);
+            var jenis1 = $("#jenis_semen").val();
+            var jenis2 = $("#jenis_pasir").val();
+            var jenis3 = $("#jenis_bata").val();
+
+            var semen = luas*9.68;
             var pasir = Math.round((luas*0.045));
+            var jlhBata = Math.round(luas * 36);
+
+            if(jenis1=="1" || jenis1=="4"){
+              semen = Math.round(semen/50);
+            } else {
+              semen = Math.round(semen/40);
+            }
+            if(jenis3=="4" || jenis3=="5"){
+              jlhBata = Math.round(luas*0.045);
+            }
+
+            var old_1 = $("#qtysemen").val();
+            var old_2 = $("#qtypasir").val();
+            var old_3 = $("#qtybata").val();
+            $("#qtysemen").val(parseInt(old_1)+parseInt(semen));
+            $("#qtypasir").val(parseInt(old_2)+parseInt(pasir));
+            $("#qtybata").val(parseInt(old_3)+parseInt(jlhBata));
+            
             $.ajax({
               type: 'POST',
               url: 'getPrice.php',
-              data: 'semen='+semen+'&pasir='+pasir,
+              data: 'jenis_1='+jenis1+'&semen='+semen+'&jenis_2='+jenis2+'&pasir='+pasir+'&jenis_3='+jenis3+'&bata='+jlhBata,
               dataType: 'json',
               success : function(data) {
                 if (data.status == 'ok') {
                   $("#harga").val(parseInt(totalharga)+parseInt(data.totalHarga));
-                  $("#totalHarga").val(parseInt(hargaTanah)+parseInt(data.totalHarga));
+                  var grandTotal = parseInt($("#harga").val()) + parseInt(hargaTanah);
+                  $("#totalHarga").val(grandTotal);
                 }else{
                   alert('Some problem occured, please try again.');
                 }
@@ -258,31 +335,44 @@
     <button id="btn-exit" class="btn btn-info">Keluar</button>
     <hr />
   </div>
+  <?php
+    $rumahID = $_GET['rumah_id'];
+    $userID = $_SESSION['user_id'];
+
+    $kns = new DB_con();
+    $query="SELECT rumah_name,jenis,ukuran,harga,
+    CASE WHEN alamat IS NULL THEN '' ELSE alamat END alamat,
+    CASE WHEN rumah_photo IS NULL THEN '../images/no_image.png' ELSE rumah_photo END rumah_photo,
+    CASE WHEN rumah_description IS NULL THEN '' ELSE rumah_description END rumah_description FROM tbl_rumah WHERE rumah_id=$rumahID AND user_id=$userID";
+    //echo $query;
+    $result = $kns->OpenCon()->query($query);
+    $item = $result->fetch_assoc();
+  ?>
   <form method="post">
     <div class="form-row">
       <div class="form-group col-md-3">
         <label class="control-label">Rumah Type</label>
-        <input type="text" class="form-control" id="rumah_name" name="rumah_name" required />
+        <input type="text" class="form-control" id="rumah_name" name="rumah_name" readonly value="<?php echo $item['rumah_name']; ?>" />
       </div>
       <div class="form-group col-md-6">
         <label class="control-label">Alamat</label>
-        <input type="text" class="form-control" id="alamat" name="alamat" required />
+        <input type="text" class="form-control" id="alamat" name="alamat" required value="<?php echo $item['alamat']; ?>" />
       </div>
       <div class="form-group col-md-3">
         <label class="control-label">Ukuran</label>
-        <input type="text" class="form-control" id="ukuran" name="ukuran" required />
+        <input type="text" class="form-control" id="ukuran" name="ukuran" readonly value="<?php echo $item['ukuran']; ?>" />
       </div>
       <div class="form-group col-md-3">
         <label class="control-label">Harga Tanah</label>
-        <input type="text" class="form-control" id="hargatanah" name="hargatanah" value=0 required />
+        <input type="text" class="form-control" id="hargatanah" name="hargatanah" value=0 readonly />
       </div>
       <div class="form-group col-md-3">
         <label class="control-label">Harga Bahan</label>
-        <input type="text" class="form-control" id="harga" name="harga" required />
+        <input type="text" class="form-control" id="harga" name="harga" value=0 readonly />
       </div>
       <div class="form-group col-md-3">
         <label class="control-label">Total Jual</label>
-        <input type="text" class="form-control" id="totalHarga" name="totalHarga" value=0 required />
+        <input type="text" class="form-control" id="totalHarga" name="totalHarga" required value="<?php echo number_format($item['harga'],0,",","."); ?>" />
       </div>
       <div class="form-group col-md-6">
         <button type="submit" name="save" class="btn btn-primary">Save</button>
@@ -301,7 +391,7 @@
         <option value="5">Semen Padang 40kg</option>
       </select>
       <label class="control-label">Semen</label>
-      <input type="text" class="form-control" id="qtysemen" name="qtysemen" placeholder="Jlh Semen" readonly />
+      <input type="text" class="form-control" id="qtysemen" name="qtysemen" placeholder="Jlh Semen" value=0 readonly />
     </div>
       <div class="col-md-3">
       <label class="control-label">Jenis Pasir</label>
@@ -311,97 +401,21 @@
         <option value="25">Pasir Mundu / M3</option>
       </select>
       <label class="control-label">Pasir</label>
-      <input type="text" class="form-control" id="qtypasir" name="qtypasir" placeholder="Jlh Pasir" readonly />
+      <input type="text" class="form-control" id="qtypasir" name="qtypasir" placeholder="Jlh Pasir" value=0 readonly />
     </div>
     <div class="col-md-3">
       <label class="control-label">Jenis Bata</label>
       <select class="form-control" id="jenis_bata" name="jenis_bata">
-        <option value="1" selected>Batu Bata / Biji</option>
-        <option value="2">Batu Bata Jumbo / Biji</option>
-        <option value="3">Batako / Biji</option>
-        <option value="4">Batu Kali / M3</option>
-        <option value="5">Batu Koral / M3</option>
+        <option value="6" selected>Batu Bata / Biji</option>
+        <option value="7">Batu Bata Jumbo / Biji</option>
+        <option value="8">Batako / Biji</option>
+        <option value="9">Batu Kali / M3</option>
+        <option value="10">Batu Koral / M3</option>
       </select>
       <label class="control-label">Batu Bata</label>
-      <input type="text" class="form-control" id="qtybata" name="qtybata" placeholder="Jlh Bata" readonly />
+      <input type="text" class="form-control" id="qtybata" name="qtybata" placeholder="Jlh Bata" value=0 readonly />
     </div>
-    <div class="col-md-3">
-      <label class="control-label">Jenis Bata</label>
-      <select class="form-control" id="jenis_bata" name="jenis_bata">
-        <option value="1" selected>Batu Bata / Biji</option>
-        <option value="2">Batu Bata Jumbo / Biji</option>
-        <option value="3">Batako / Biji</option>
-        <option value="4">Batu Kali / M3</option>
-        <option value="5">Batu Koral / M3</option>
-      </select>
-      <label class="control-label">Batu Bata</label>
-      <input type="text" class="form-control" id="qtybata" name="qtybata" placeholder="Jlh Bata" readonly />
-    </div>
-    <?php
-      $user = $_SESSION['user_name'];
-      if(isset($_POST['upload'])){
-        extract($_POST);
-        // definisi folder upload
-        define("UPLOAD_DIR", "img/user/");
-        if ( ! is_dir(UPLOAD_DIR)) {
-            mkdir(UPLOAD_DIR);
-        }
-        if (!empty($_FILES["photo_pict"])) {
-            $photo_pict = $_FILES["photo_pict"];
-            $ext    = pathinfo($_FILES["photo_pict"]["name"], PATHINFO_EXTENSION);
-            $size   = $_FILES["photo_pict"]["size"];
-
-            if ($photo_pict["error"] !== UPLOAD_ERR_OK) {
-                echo '<div class="alert alert-warning">Gagal upload file.</div>';
-                exit;
-            }
-            if ($size>3000000) {
-                echo '<div class="alert alert-warning">File terlalu besar,Gagal upload file.</div>';
-                exit;
-            }
-            // filename yang aman
-            $temp = explode(".", $_FILES["photo_pict"]["name"]);
-            $newfilename = $user . '.' . end($temp);
-
-            $name = preg_replace("/[^A-Z0-9._-]/i", "_", $newfilename);
-
-            // // mencegah overwrite filename
-            // $i = 0;
-            // $parts = pathinfo($name);
-            // while (file_exists(UPLOAD_DIR . $name)) {
-            // $i++;
-            // $name = $parts["filename"] . "-" . $i . "." . $parts["extension"];
-            // }
-
-            // upload file
-            $success = move_uploaded_file($photo_pict["tmp_name"],UPLOAD_DIR . $name);
-            if (!$success) {
-                echo '<div class="alert alert-warning">Gagal upload file.</div>';
-                exit;
-            }
-            else{
-                $kns = new DB_con();
-                $query = "INSERT INTO tbl_rumah (rumah_name,jenis,ukuran,harga,alamat,rumah_photo,rumah_description,rumah_sketch) VALUES('$rumah_name',1,'$ukuran',$totalHarga,'$alamat',NULL,'','images/Home/$name')";
-                $hasil = $kns->OpenCon()->query($query) or die($kns->OpenCon()->error);
-                if($hasil){
-                    //echo '<div class="alert alert-success">File berhasil di upload.</div>';
-                    echo "<script type='text/javascript'>
-                          alert(Rumah baru sudah di tambahkan');
-                          window.location='index.php';
-                          </script>";
-                }else{
-                    echo '<div class="alert alert-warning">Gagal upload file.</div>';
-                    exit;
-                }
-            }
-            // set permisi file
-            chmod(UPLOAD_DIR . $name, 0644);
-        }
-      }
-    ?>
   </form>
-  <!-- <label class="control-label">Batu Bata</label>
-  <input type="text" class="form-control" id="qty" name="qty" readonly /> -->
   <script>
     $('#btn-success').click(function(){
       var filename = $("#rumah_name").val();

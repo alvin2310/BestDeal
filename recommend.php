@@ -223,12 +223,12 @@
                       $('#deskripsi').text(data.rumah_description);
                       $('#bata').text(data.bata + " buah");
                       $('#semen').text(data.semen + " sak");
-                      $('#kayu').text(data.kayu + " buah");
                       $('#pasir').text(data.pasir + " m3");
+                      /* $('#kayu').text(data.kayu + " buah");
                       $('#beton').text(data.beton + " buah");
                       $('#triplek').text(data.triplek + " buah");
                       $('#asbes').text(data.asbes + " buah");
-                      $('#cat').text(data.cat + " kaleng");
+                      $('#cat').text(data.cat + " kaleng"); */
                       $('#avgrat').text(data.avgrating);
                       $('#totalrat').text(data.totalrating);
                     }else{
@@ -315,10 +315,10 @@
                 <p id="bata"></p>
                 <label>Semen</label>
                 <p id="semen"></p>
-                <label>Kayu</label>
-                <p id="kayu"></p>
                 <label>Pasir</label>
                 <p id="pasir"></p>
+                <!-- <label>Kayu</label>
+                <p id="kayu"></p>
                 <label>Beton</label>
                 <p id="beton"></p>
                 <label>Triplek</label>
@@ -326,7 +326,7 @@
                 <label>Asbes</label>
                 <p id="asbes"></p>
                 <label>Cat</label>
-                <p id="cat"></p>
+                <p id="cat"></p> -->
               </div>
               <!-- <div class="form-group">
                 <label>Post Comment</label>

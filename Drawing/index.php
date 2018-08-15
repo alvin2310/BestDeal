@@ -113,9 +113,10 @@
                     <td>".$data['harga']."</td>
                     <td>".$data['alamat']."</td>
                     <td>
-                      <a href=\"javascript:void(0)\" data-id=\"".$data['rumah_id']."\" name=\"accept\" onclick=\"accept(".$data['rumah_id'].")\" class=\"btn btn-info\" title=\"Accept\">
+                      <a href=\"javascript:void(0)\" data-id=\"".$data['rumah_id']."\" name=\"accept\" onclick=\"accept(".$data['rumah_id'].")\" class=\"btn btn-success\" title=\"Accept\">
                           <i class=\"fa fa-edit\"></i>
                       </a>
+                      <a href=\"./create.php?rumah_id=".$data['rumah_id']."\" class=\"btn btn-info\" title=\"Design\"><i class=\"fa fa-paint-brush\"></i></a>
                       <a href=\"javascript:void(0)\" data-id=\"".$data['rumah_id']."\" name=\"delete\" onclick=\"remove(".$data['rumah_id'].")\" class=\"btn btn-danger\" title=\"Remove\">
                           <i class=\"fa fa-trash-o\"></i>
                       </a>
@@ -128,15 +129,143 @@
         ?>
       </div>
     </div>
+    <!-- View Modal -->
+      <div class="modal fade" id="view-modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <input type="hidden" id="viewId" name="viewId" value="" />
+              <h4 class="modal-title">Rumah </h4>
+              <p id="rumah_name"></p>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+              <div class="form-group">
+                <center>
+                  <img class="img-fluid" name="profil" id="profil" src="<?php echo $path; ?>" alt="User Pict" height="500" width="300">
+                </center>
+                <label class="form-label">Upload Foto:</label>
+                <input type="file" name="photo_pict" class="filestyle" data-icon="false" accept="image/*">
+              </div>
+              <div class="form-group">
+                <label>Ukuran</label>
+                <input type="text" class="form-control" id="ukuran" value="" readonly />
+              </div>
+              <div class="form-group">
+                <label>Alamat</label>
+                <input type="text" class="form-control" id="alamat" />
+              </div>
+              <div class="form-group">
+                <label>Harga Jual</label>
+                <input type="text" class="form-control" id="harga" />
+              </div>
+              <div class="form-group">
+                <label>Deskripsi</label>
+                <textarea class="form-control" id="deskripsi"></textarea>
+              </div>
+            </div>
+          
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="submit" id="save" name="save" class="btn btn-info">Save</button>
+            </div>
+            <?php
+              if(isset($_POST['save'])){
+                extract($_POST);
+                // definisi folder upload
+                define("UPLOAD_DIR", "img/user/");
+                if ( ! is_dir(UPLOAD_DIR)) {
+                  mkdir(UPLOAD_DIR);
+                }
+                if (!empty($_FILES["photo_pict"])) {
+                  $photo_pict = $_FILES["photo_pict"];
+                  $ext    = pathinfo($_FILES["photo_pict"]["name"], PATHINFO_EXTENSION);
+                  $size   = $_FILES["photo_pict"]["size"];
+
+                  if ($photo_pict["error"] !== UPLOAD_ERR_OK) {
+                    echo '<div class="alert alert-warning">Gagal upload file.</div>';
+                    exit;
+                  }
+                  if ($size>3000000) {
+                    echo '<div class="alert alert-warning">File terlalu besar,Gagal upload file.</div>';
+                    exit;
+                  }
+                  // filename yang aman
+                  $temp = explode(".", $_FILES["photo_pict"]["name"]);
+                  $newfilename = $user . '.' . end($temp);
+
+                  $name = preg_replace("/[^A-Z0-9._-]/i", "_", $newfilename);
+
+                  // // mencegah overwrite filename
+                  // $i = 0;
+                  // $parts = pathinfo($name);
+                  // while (file_exists(UPLOAD_DIR . $name)) {
+                  // $i++;
+                  // $name = $parts["filename"] . "-" . $i . "." . $parts["extension"];
+                  // }
+
+                  // upload file
+                  $success = move_uploaded_file($photo_pict["tmp_name"],UPLOAD_DIR . $name);
+                  if (!$success) {
+                    echo '<div class="alert alert-warning">Gagal upload file.</div>';
+                    exit;
+                  }
+                  else{
+                    $kns = new DB_con();
+                    $query = "INSERT INTO tbl_rumah (rumah_name,jenis,ukuran,harga,alamat,rumah_photo,rumah_description,rumah_sketch) VALUES('$rumah_name',1,'$ukuran',$totalHarga,'$alamat',NULL,'','images/Home/$name')";
+                    $hasil = $kns->OpenCon()->query($query) or die($kns->OpenCon()->error);
+                    if($hasil){
+                      //echo '<div class="alert alert-success">File berhasil di upload.</div>';
+                      echo "<script type='text/javascript'>
+                            alert(Rumah baru sudah di tambahkan');
+                            window.location='index.php';
+                            </script>";
+                    }else{
+                      echo '<div class="alert alert-warning">Gagal upload file.</div>';
+                      exit;
+                    }
+                  }
+                  // set permisi file
+                  chmod(UPLOAD_DIR . $name, 0644);
+                }
+              }
+            ?>
+          
+          </div>
+
+        </div>
+      </div>
+    <!-- End View Modal -->
     <script>
       function accept(id){
-        alert("You accept "+id);
+        $.ajax({
+          type: 'POST',
+          url: 'getHome.php',
+          data: 'postID='+id,
+          dataType: 'json',
+          success : function(data) {
+            if (data.status == 'ok') {
+              $('#rumah_name').html("<h4>"+data.rumah_name+"</h4>");
+              $('#alamat').val(data.alamat);
+              $('#ukuran').val(data.ukuran);
+              $('#harga').val(data.harga);
+              $('#deskripsi').text(data.rumah_description);
+            }else{
+              alert('Some problem occured, please try again.');
+            }
+          }
+        });
+        /* $(".modal-footer #rating_start").postID(viewId); */
+        $('#view-modal').modal('show');
       }
       function remove(id){
         alert("You remove "+id);
       }
     </script>
-    <!-- <script src="../js/jquery-2.2.3.min.js"></script> -->
+    <script src="../js/jquery-2.2.3.min.js"></script>
     <!-- Stats-Number-Scroller-Animation-JavaScript -->
       <script src="../js/waypoints.min.js"></script> 
       <script src="../js/counterup.min.js"></script> 

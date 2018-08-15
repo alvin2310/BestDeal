@@ -165,8 +165,10 @@
                   dataType: 'json',
                   success : function(data) {
                     if (data.status == 'ok') {
+                      var harga = data.harga * 1;
                       var dp = data.harga * 20 / 100;
-                      var pct = "12%"; // or from an <input> field or whatever
+                      var pct = "12"; // or from an <input> field or whatever
+                      $('#bunga').text(pct + " %");
                       pct = parseFloat(pct) / 100;
                       pct = (data.harga - dp) * pct;
                       var lama = Math.ceil(( ((data.harga - dp) + pct) / data.selisih) / 12);
@@ -174,21 +176,40 @@
                         lama = 10;
                       } else if(lama > 10 && lama < 15) {
                         lama = 15;
+                      } else if(lama > 15 && lama < 20) {
+                        lama = 20;
                       }
+                      var cicilan = ((data.harga - dp) + pct) / (lama*12);
+                      var bata = data.bata;
+                      var semen = data.semen;
+                      var pasir = data.pasir;
+                      /* var kayu = data.kayu;
+                      var beton = data.beton;
+                      var triplek = data.triplek;
+                      var asbes = data.asbes;
+                      var cat = data.cat; */
                       $('#rumah_name').html("<h4>"+data.rumah_name+"</h4>");
                       $('#rating_star').attr('data-postID',data.rumah_id);
                       $('#alamat').text(data.alamat);
+                      $('#earn').text((data.selisih * 1).toLocaleString('it-IT', {style: 'currency', currency: 'IDR'}));
+                      $('#harga').text(harga.toLocaleString('it-IT', {style: 'currency', currency: 'IDR'}));
                       $('#min_dp').text(dp.toLocaleString('it-IT', {style: 'currency', currency: 'IDR'}));
-                      $('#lama_kpr').text(lama+" Tahun");
+                      if(lama > 20) {
+                        lama = "Lama KPR Melebihi 20 Tahun Perbesar Min. DP";
+                        $('#lama_kpr').text(lama);
+                      } else {
+                        $('#lama_kpr').text(lama+" Tahun");
+                      }
+                      $('#cicilan').text(cicilan.toLocaleString('it-IT', {style: 'currency', currency: 'IDR'})+" / Bulan");
                       $('#deskripsi').text(data.rumah_description);
-                      $('#bata').text(data.bata);
-                      $('#semen').text(data.semen);
-                      $('#kayu').text(data.kayu);
-                      $('#pasir').text(data.pasir);
-                      $('#beton').text(data.beton);
-                      $('#triplek').text(data.triplek);
-                      $('#asbes').text(data.asbes);
-                      $('#cat').text(data.cat);
+                      $('#bata').text(data.bata + " buah");
+                      $('#semen').text(data.semen + " sak");
+                      $('#pasir').text(data.pasir + " m3");
+                      /* $('#kayu').text(data.kayu + " buah");
+                      $('#beton').text(data.beton + " buah");
+                      $('#triplek').text(data.triplek + " buah");
+                      $('#asbes').text(data.asbes + " buah");
+                      $('#cat').text(data.cat + " kaleng"); */
                       $('#avgrat').text(data.avgrating);
                       $('#totalrat').text(data.totalrating);
                     }else{
@@ -223,12 +244,42 @@
                 <p id="alamat"></p>
               </div>
               <div class="form-group">
+                <label>Pendapatan Bersih</label>
+                <p id="earn"></p>
+                <input type="text" class="form-control" id="inp_earn" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" value="0" />
+              </div>
+              <div class="form-group">
+                <label>Harga Rumah</label>
+                <p id="harga"></p>
+              </div>
+              <div class="form-group">
                 <label>Min. DP</label>
                 <p id="min_dp"></p>
+                <input type="text" class="form-control" id="inp_dp" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" value="0" />
+              </div>
+              <div class="form-group">
+                <label>Bunga</label>
+                <div class="form-group row">
+                  <div class="col-xs-2">
+                    <p id="bunga"></p>
+                  </div>
+                  <div class="col-xs-2">
+                    <input type="text" class="form-control input-sm" id="inp_bunga" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" value="12" />
+                  </div>
+                  <div class="col-xs-2">
+                    <label class="control-label">%</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Cicilan / Bulan</label>
+                <p id="cicilan"></p>
+                <input type="text" class="form-control" id="inp_cicilan" value="0" readonly />
               </div>
               <div class="form-group">
                 <label>Lama KPR</label>
                 <p id="lama_kpr"></p>
+                <input type="text" class="form-control" id="inp_lama" value="0" readonly/>
               </div>
               <div class="form-group">
                 <label>Rating</label>
@@ -245,10 +296,10 @@
                 <p id="bata"></p>
                 <label>Semen</label>
                 <p id="semen"></p>
-                <label>Kayu</label>
-                <p id="kayu"></p>
                 <label>Pasir</label>
                 <p id="pasir"></p>
+                <!-- <label>Kayu</label>
+                <p id="kayu"></p>
                 <label>Beton</label>
                 <p id="beton"></p>
                 <label>Triplek</label>
@@ -256,7 +307,7 @@
                 <label>Asbes</label>
                 <p id="asbes"></p>
                 <label>Cat</label>
-                <p id="cat"></p>
+                <p id="cat"></p> -->
               </div>
               <!-- <div class="form-group">
                 <label>Post Comment</label>
@@ -274,27 +325,163 @@
             </div>
           
           </div>
+          <script>
+            function fun_AllowOnlyAmountAndDot(txt)
+            {
+              if(event.keyCode > 47 && event.keyCode < 58 || event.keyCode == 46)
+              {
+                var txtbx=document.getElementById(txt);
+                var amount = document.getElementById(txt).value;
+                var present=0;
+                var count=0;
 
-          <script language="javascript" type="text/javascript">
-            /* $("#send").click(function() {
-              var val = $("#comments").val();
-              var attrVal = $('#open-View').attr("data-id");
-              $.ajax({
-                  type: 'POST',
-                  url: 'comment.php',
-                  data: 'postID='+attrVal+'&comment='+val,
-                  dataType: 'json',
-                  success : function(data) {
-                      if (data.status == 'ok') {
-                        $("#comments").val("");
-                        $("#message").empty();
-                        $("#message").append("Comment post successfully");
-                      }else{
-                          alert('Some problem occured, please try again.');
-                      }
+                if(amount.indexOf(".",present)||amount.indexOf(".",present+1));
+                {
+                  // alert('0');
+                }
+                do
+                {
+                present=amount.indexOf(".",present);
+                if(present!=-1)
+                  {
+                  count++;
+                  present++;
                   }
-              });
-            }); */
+                }
+                while(present!=-1);
+                if(present==-1 && amount.length==0 && event.keyCode == 46)
+                {
+                  event.keyCode=0;
+                  //alert("Wrong position of decimal point not  allowed !!");
+                  return false;
+                }
+
+                if(count>=1 && event.keyCode == 46)
+                {
+                  event.keyCode=0;
+                  //alert("Only one decimal point is allowed !!");
+                  return false;
+                }
+                if(count==1)
+                {
+                  var lastdigits=amount.substring(amount.indexOf(".")+1,amount.length);
+                  if(lastdigits.length>=2)
+                  {
+                    //alert("Two decimal places only allowed");
+                    event.keyCode=0;
+                    return false;
+                  }
+                }
+                return true;
+              }
+              else
+              {
+                event.keyCode=0;
+                //alert("Only Numbers with dot allowed !!");
+                return false;
+              }
+            }
+            $(document).on("change", "#inp_dp", function () {
+              var dp = $(this).val();
+              var harga = $("#harga").text();
+              harga = harga.split(".").join("");
+              harga = parseInt(harga);
+              var selisih = $("#earn").text();
+              selisih = selisih.split(".").join("");
+              selisih = parseInt(selisih);
+              var pct = $("#inp_bunga").val(); // or from an <input> field or whatever
+              pct = parseFloat(pct) / 100;
+              pct = (harga * 1 - dp) * pct;
+              var lama = Math.ceil(( ((harga * 1 - dp) + pct) / selisih) / 12);
+              if(lama > 5 && lama < 10) {
+                lama = 10;
+              } else if(lama > 10 && lama < 15) {
+                lama = 15;
+              } else if(lama > 15 && lama < 20) {
+                lama = 20;
+              }
+              alert("Harga "+harga+" dengan DP "+dp);
+              var cicilan = ((harga - dp) + pct) / (lama*12);
+              if(lama > 20) {
+                lama = "Lama KPR Melebihi 20 Tahun Perbesar Min. DP";
+                $('#inp_lama').val(lama);
+              } else {
+                $('#inp_lama').val(lama+" Tahun");
+              }
+              $('#inp_cicilan').val(cicilan.toLocaleString('it-IT', {style: 'currency', currency: 'IDR'})+" / Bulan");
+            });
+            $(document).on("change", "#inp_bunga", function () {
+              var dp = 0;
+              if($("#inp_dp").val() == 0){
+                dp = $("#min_dp").text();
+                dp = dp.split(".").join("");
+                dp = parseInt(dp);
+              } else {
+                dp = $("#inp_dp").val();
+              }
+              var harga = $("#harga").text();
+              harga = harga.split(".").join("");
+              harga = parseInt(harga);
+              var selisih = $("#earn").text();
+              selisih = selisih.split(".").join("");
+              selisih = parseInt(selisih);
+              var pct = $(this).val(); // or from an <input> field or whatever
+              pct = parseFloat(pct) / 100;
+              pct = (harga * 1 - dp) * pct;
+              var lama = Math.ceil(( ((harga * 1 - dp) + pct) / selisih) / 12);
+              if(lama > 5 && lama < 10) {
+                lama = 10;
+              } else if(lama > 10 && lama < 15) {
+                lama = 15;
+              } else if(lama > 15 && lama < 20) {
+                lama = 20;
+              }
+              alert("Harga "+harga+" dengan DP "+dp);
+              var cicilan = ((harga - dp) + pct) / (lama*12);
+              if(lama > 20) {
+                lama = "Lama KPR Melebihi 20 Tahun Perbesar Min. DP";
+                $('#inp_lama').val(lama);
+              } else {
+                $('#inp_lama').val(lama+" Tahun");
+              }
+              $('#inp_cicilan').val(cicilan.toLocaleString('it-IT', {style: 'currency', currency: 'IDR'})+" / Bulan");
+            });
+            $(document).on("change", "#inp_earn", function () {
+              var dp = 0;
+              if($("#inp_dp").val() == 0){
+                dp = $("#min_dp").text();
+                dp = dp.split(".").join("");
+                dp = parseInt(dp);
+              } else {
+                dp = $("#inp_dp").val();
+              }
+              var harga = $("#harga").text();
+              harga = harga.split(".").join("");
+              harga = parseInt(harga);
+              var selisih = $(this).val();
+              selisih = selisih.split(".").join("");
+              selisih = parseInt(selisih);
+              var pct = $("#inp_bunga").val(); // or from an <input> field or whatever
+              pct = parseFloat(pct) / 100;
+              pct = (harga * 1 - dp) * pct;
+              var lama = Math.ceil(( ((harga * 1 - dp) + pct) / selisih) / 12);
+              if(lama > 5 && lama < 10) {
+                lama = 10;
+              } else if(lama > 10 && lama < 15) {
+                lama = 15;
+              } else if(lama > 15 && lama < 20) {
+                lama = 20;
+              }
+              alert("Harga "+harga+" dengan DP "+dp);
+              var cicilan = ((harga - dp) + pct) / (lama*12);
+              if(lama > 20) {
+                lama = "Lama KPR Melebihi 20 Tahun Perbesar Min. DP";
+                $('#inp_lama').val(lama);
+              } else {
+                $('#inp_lama').val(lama+" Tahun");
+              }
+              $('#inp_cicilan').val(cicilan.toLocaleString('it-IT', {style: 'currency', currency: 'IDR'})+" / Bulan");
+            });
           </script>
         </div>
       </div>

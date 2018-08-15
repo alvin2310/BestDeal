@@ -19,6 +19,9 @@ class DB_con {
 		return $this->connection;
 	}
 
+	function CloseCon(){
+		return mysqli_close($this->connection);
+	}
 }
 
 ?>
