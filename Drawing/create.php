@@ -256,9 +256,10 @@
             var old_1 = $("#qtysemen").val();
             var old_2 = $("#qtypasir").val();
             var old_3 = $("#qtybata").val();
-            $("#qtysemen").val(parseInt(semen));
-            $("#qtypasir").val(parseInt(pasir));
-            $("#qtybata").val(parseInt(jlhBata));
+
+            $("#qtysemen").val(parseInt(old_1)-parseInt(semen));
+            $("#qtypasir").val(parseInt(old_2)-parseInt(pasir));
+            $("#qtybata").val(parseInt(old_3)-parseInt(jlhBata));
 
             var old_harga = $("#totalHarga").val();
             $.ajax({
@@ -307,9 +308,9 @@
             var old_2 = $("#qtypasir").val();
             var old_3 = $("#qtybata").val();
 
-            $("#qtysemen").val(parseInt(semen));
-            $("#qtypasir").val(parseInt(pasir));
-            $("#qtybata").val(parseInt(jlhBata));
+            $("#qtysemen").val(parseInt(old_1)-parseInt(semen));
+            $("#qtypasir").val(parseInt(old_2)-parseInt(pasir));
+            $("#qtybata").val(parseInt(old_3)-parseInt(jlhBata));
             
             var old_harga = $("#totalHarga").val();
             $.ajax({
