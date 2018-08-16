@@ -90,20 +90,20 @@
           var jenis3 = $("#jenis_bata").val();
           
           if(itemType=="Tanah"){
-            $item.css("width",300);
+            $item.css("width",200);
             $item.css("height",480);
             $item.removeClass("tool-master");
             $item.attr("id",itemType);
             $item.css("z-index",2);
             var tWid = parseInt($item.width());
             var tHei = parseInt($item.height());
-            var t = "P:"+((tHei/40).toFixed(1)).replace('.0','')+"m <br />L:"+((tWid/60).toFixed(1)).replace('.0','')+"m";
+            var t = "P:"+((tHei/40).toFixed(1)).replace('.0','')+"m <br />L:"+((tWid/40).toFixed(1)).replace('.0','')+"m";
             $item
               .find("p")
               .html(t);
-            var hargaTanah = ((tHei/40)*(tWid/60)) * 1000000; //$("#hargatanah").val();
-            tWid = tWid/60;
-            tHei = tHei/40;
+            var hargaTanah = ((tHei/40)*(tWid/40)) * 1000000; //$("#hargatanah").val();
+            tWid = parseInt(((tWid/40).toFixed(1)).replace('.0',''));
+            tHei = parseInt(((tHei/40).toFixed(1)).replace('.0',''));
             $("#hargatanah").val(hargaTanah);
             $("#ukuran").val((parseInt(tWid))+" x "+(parseInt(tHei)));
             var pl = (tWid)*(tHei);
@@ -139,8 +139,8 @@
             $item
               .find("p")
               .html(t);
-            tWid = tWid/40;
-            tHei = tHei/40;
+            tWid = parseInt(((tWid/40).toFixed(1)).replace('.0',''));
+            tHei = parseInt(((tHei/40).toFixed(1)).replace('.0',''));
 
             var pl = (tWid)*(tHei);
             var pt = (tHei)*2.8;
@@ -175,8 +175,8 @@
             $item
               .find("p")
               .html(t);
-            tWid = tWid/40;
-            tHei = tHei/40;
+            tWid = parseInt(((tWid/40).toFixed(1)).replace('.0',''));
+            tHei = parseInt(((tHei/40).toFixed(1)).replace('.0',''));
 
             var pl = (tWid)*(tHei);
             var pt = (tHei)*2.8;
@@ -205,8 +205,8 @@
             $item.css("z-index",4);
             var tWid = parseInt($item.width());
             var tHei = parseInt($item.height());
-            tWid = tWid/40;
-            tHei = tHei/40;
+            tWid = parseInt(((tWid/40).toFixed(1)).replace('.0',''));
+            tHei = parseInt(((tHei/40).toFixed(1)).replace('.0',''));
           }
           $item.addClass("item-child");
 
@@ -310,17 +310,13 @@
           var tWid = parseInt($(this).css("width"));
           var tHei = parseInt($(this).css("height"));
           var hargaTanah = $("#hargatanah").val();
-          var t = "P:"+((tHei/40).toFixed(1)).replace('.0','')+"m <br />L:"+((tWid/60).toFixed(1)).replace('.0','')+"m";
-          $(this)
-            .find("p")
-            .html(t);
           if(itemType=="tanah"){
-            var hargaTanah = ((tHei/40)*(tWid/60)) * 1000000;
+            var hargaTanah = ((tHei/40)*(tWid/40)) * 1000000;
             $("#hargatanah").val(hargaTanah);
 
-            var pl = (tWid/60)*(tHei/40);
+            var pl = (tWid/40)*(tHei/40);
             var pt = (tHei/40)*2.8;
-            var lt = (tWid/60)*2.8;
+            var lt = (tWid/40)*2.8;
             var luas = 2*(pl+pt+lt);
 
             var semen = Math.round((luas*9.68));
@@ -340,8 +336,13 @@
             $("#semen1").val(semen);
             $("#pasir1").val(pasir);
             $("#bata1").val(jlhBata);
-            var ukuran = ((tWid/60).toFixed(1)).replace('.0','') + " x " + ((tHei/40).toFixed(1)).replace('.0','');
+            var ukuran = ((tWid/40).toFixed(1)).replace('.0','') + " x " + ((tHei/40).toFixed(1)).replace('.0','');
             $("#ukuran").val(ukuran);
+
+            var t = "P:"+((tHei/40).toFixed(1)).replace('.0','')+"m <br />L:"+((tWid/40).toFixed(1)).replace('.0','')+"m";
+            $(this)
+              .find("p")
+              .html(t);
           } else if (itemType=="room") {
             var pl = (tWid/40)*(tHei/40);
             var pt = (tHei/40)*2.8;
@@ -365,6 +366,11 @@
             $("#semen2").val(semen);
             $("#pasir2").val(pasir);
             $("#bata2").val(jlhBata);
+
+            var t = "P:"+((tHei/40).toFixed(1)).replace('.0','')+"m <br />L:"+((tWid/40).toFixed(1)).replace('.0','')+"m";
+            $(this)
+              .find("p")
+              .html(t);
           } else if (itemType=="wc") {
             var pl = (tWid/40)*(tHei/40);
             var pt = (tHei/40)*2.8;
@@ -388,6 +394,11 @@
             $("#semen3").val(semen);
             $("#pasir3").val(pasir);
             $("#bata3").val(jlhBata);
+
+            var t = "P:"+((tHei/40).toFixed(1)).replace('.0','')+"m <br />L:"+((tWid/40).toFixed(1)).replace('.0','')+"m";
+            $(this)
+              .find("p")
+              .html(t);
           }
           /* else {
             var totalharga = $("#harga").val();
@@ -470,9 +481,8 @@
     <br />
     <label class="control-label">NB:</label>
     <ul>
-      <li>Ukuran denah 6:4 secara Default Tanah dalam meter : 5 x 12</li>
+      <li>Ratio dalam rancangan adalah 4:4</li>
       <li>Jenis Pintu ada 2 Dorong dan tarik</li>
-      <li>Ukuran Ruangan dan kamar Mandi 4:4 secara Default Ruangan dalam meter : 4 x 4</li>
     </ul>
     <hr />
     <script type="text/javascript" src="./js/html2canvas.js"></script>
