@@ -8,13 +8,13 @@ if(!empty($_POST['postID'])){
     $uid = $_POST['userID'];
 
     //Fetch rating deatails from database
-    $query2 = "SELECT (user_earn-user_spent) selisih FROM tbl_users WHERE user_id=$uid";
+    $query2 = "SELECT (user_earn-user_spent) selisih,simpanan FROM tbl_users WHERE user_id=$uid";
     $result = $kns->OpenCon()->query($query2);
     $user = $result->fetch_assoc();
 
     $query="SELECT A.rumah_id,A.rumah_name,
             CASE WHEN A.alamat IS NULL THEN 'Kosong' ELSE A.alamat END alamat,
-            A.rumah_description,A.harga,".$user['selisih']." selisih,rumah_description,
+            A.rumah_description,A.harga,".$user['selisih']." selisih,".$user['simpanan']." simpanan,rumah_description,
             CASE WHEN bata_qty IS NULL THEN 0 ELSE bata_qty END bata,
             CASE WHEN semen_qty IS NULL THEN 0 ELSE semen_qty END semen,
             CASE WHEN kayu_qty IS NULL THEN 0 ELSE kayu_qty END kayu,

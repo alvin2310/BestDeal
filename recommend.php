@@ -190,7 +190,14 @@
                       $('#bunga').text(pct + " %");
                       pct = parseFloat(pct) / 100;
                       pct = (data.harga - dp) * pct;
-                      var lama = Math.ceil(( ((data.harga - dp) + pct) / data.selisih) / 12);
+                      var sisaBayar = data.harga - data.simpanan;
+                      var lama = 0;
+                      if(sisaBayar<0){
+                        lama = 0;
+                      } else {
+                        lama = Math.ceil(( ((sisaBayar) + pct) / data.selisih) / 12);
+                      }
+
                       if(lama > 5 && lama < 10) {
                         lama = 10;
                       } else if(lama > 10 && lama < 15) {
@@ -201,16 +208,17 @@
                       var cicilan = ((data.harga - dp) + pct) / (lama*12);
                       var bata = data.bata;
                       var semen = data.semen;
-                      var kayu = data.kayu;
+                      /* var kayu = data.kayu;
                       var pasir = data.pasir;
                       var beton = data.beton;
                       var triplek = data.triplek;
                       var asbes = data.asbes;
-                      var cat = data.cat;
+                      var cat = data.cat; */
                       $('#rumah_name').html("<h4>"+data.rumah_name+"</h4>");
                       $('#rating_star').attr('data-postID',data.rumah_id);
                       $('#alamat').text(data.alamat);
                       $('#earn').text((data.selisih * 1).toLocaleString('it-IT', {style: 'currency', currency: 'IDR'}));
+                      $('#kesanggupan').text((data.simpanan * 1).toLocaleString('it-IT', {style: 'currency', currency: 'IDR'}));
                       $('#harga').text(harga.toLocaleString('it-IT', {style: 'currency', currency: 'IDR'}));
                       $('#min_dp').text(dp.toLocaleString('it-IT', {style: 'currency', currency: 'IDR'}));
                       if(lama > 20) {
@@ -268,13 +276,17 @@
                 <input type="text" class="form-control" id="inp_earn" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" value="0" />
               </div>
               <div class="form-group">
+                <label>Kesanggupan</label>
+                <p id="kesanggupan"></p>     
+                <input type="text" class="form-control" id="inp_dp" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" value="0" />           
+              </div>
+              <div class="form-group">
                 <label>Harga Rumah</label>
                 <p id="harga"></p>
               </div>
               <div class="form-group">
-                <label>Kesanggupan</label>
+                <label>Min. DP Rumah</label>
                 <p id="min_dp"></p>
-                <input type="text" class="form-control" id="inp_dp" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" value="0" />
               </div>
               <div class="form-group">
                 <label>Bunga</label>
@@ -411,7 +423,16 @@
               var pct = $("#inp_bunga").val(); // or from an <input> field or whatever
               pct = parseFloat(pct) / 100;
               pct = (harga * 1 - dp) * pct;
-              var lama = Math.ceil(( ((harga * 1 - dp) + pct) / selisih) / 12);
+
+              var sisaBayar = harga - dp;
+              var lama = 0;
+              if(sisaBayar<0){
+                lama = 0;
+              } else {
+                lama = Math.ceil(( ((sisaBayar) + pct) / data.selisih) / 12);
+              }
+
+              //var lama = Math.ceil(( ((harga * 1 - dp) + pct) / selisih) / 12);
               if(lama > 5 && lama < 10) {
                 lama = 10;
               } else if(lama > 10 && lama < 15) {
@@ -447,7 +468,16 @@
               var pct = $(this).val(); // or from an <input> field or whatever
               pct = parseFloat(pct) / 100;
               pct = (harga * 1 - dp) * pct;
-              var lama = Math.ceil(( ((harga * 1 - dp) + pct) / selisih) / 12);
+
+              var sisaBayar = harga - dp;
+              var lama = 0;
+              if(sisaBayar<0){
+                lama = 0;
+              } else {
+                lama = Math.ceil(( ((sisaBayar) + pct) / data.selisih) / 12);
+              }
+
+              //var lama = Math.ceil(( ((harga * 1 - dp) + pct) / selisih) / 12);
               if(lama > 5 && lama < 10) {
                 lama = 10;
               } else if(lama > 10 && lama < 15) {
@@ -483,7 +513,16 @@
               var pct = $("#inp_bunga").val(); // or from an <input> field or whatever
               pct = parseFloat(pct) / 100;
               pct = (harga * 1 - dp) * pct;
-              var lama = Math.ceil(( ((harga * 1 - dp) + pct) / selisih) / 12);
+
+              var sisaBayar = harga - dp;
+              var lama = 0;
+              if(sisaBayar<0){
+                lama = 0;
+              } else {
+                lama = Math.ceil(( ((sisaBayar) + pct) / data.selisih) / 12);
+              }
+
+              //var lama = Math.ceil(( ((harga * 1 - dp) + pct) / selisih) / 12);
               if(lama > 5 && lama < 10) {
                 lama = 10;
               } else if(lama > 10 && lama < 15) {

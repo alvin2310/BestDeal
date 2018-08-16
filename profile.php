@@ -154,7 +154,7 @@
                 <input type="text" class="form-control" id="spent" name="spent" placeholder="Pengeluaran" value="<?php echo number_format($profile[0]['user_spent'],0,',','.'); ?>" autocomplete="off" maxlength="20" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" required>
               </div>
               <div class="form-group">
-                <label class="control-label">Min. DP</label>
+                <label class="control-label">Kesanggupan</label>
                 <input type="text" class="form-control" id="simpanan" name="simpanan" placeholder="Simpanan" autocomplete="off" maxlength="20" value="<?php echo number_format($profile[0]['simpanan'],0,',','.'); ?>" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" required>
               </div>
               <p class="text-center">

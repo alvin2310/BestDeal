@@ -84,7 +84,11 @@
         drop: function( event, ui ) {
           var $item = ui.draggable.clone();
           var itemType = $item.find("p").text();
-          //alert("Jenis Barang " + itemType);
+
+          var jenis1 = $("#jenis_semen").val();
+          var jenis2 = $("#jenis_pasir").val();
+          var jenis3 = $("#jenis_bata").val();
+          
           if(itemType=="Tanah"){
             $item.css("width",300);
             $item.css("height",480);
@@ -102,7 +106,28 @@
             $item
               .find("p")
               .html(t);
-          } else if(itemType=="Room" || itemType=="WC"){
+            var pl = (tWid)*(tHei);
+            var pt = (tHei)*2.8;
+            var lt = (tWid)*2.8;
+            var luas = 2*(pl+pt+lt);
+            var semen = Math.round((luas*9.68));
+            var pasir = Math.round((luas*0.045));
+            var jlhBata = luas;
+
+            if(jenis1=="1" || jenis1=="4"){
+              semen = Math.round(semen/50);
+            } else {
+              semen = Math.round(semen/40);
+            }
+            if(jenis3=="4" || jenis3=="5"){
+              jlhBata = Math.round(jlhBata*0.045);
+            } else {
+              jlhBata = Math.round(jlhBata*36);
+            }
+            $("#semen1").val(semen);
+            $("#pasir1").val(pasir);
+            $("#bata1").val(jlhBata);
+          } else if(itemType=="Room"){
             $item.css("width",160);
             $item.css("height",160);
             $item.removeClass("tool-master");
@@ -112,6 +137,60 @@
             var tHei = parseInt($item.height());
             tWid = tWid/40;
             tHei = tHei/40;
+
+            var pl = (tWid)*(tHei);
+            var pt = (tHei)*2.8;
+            var lt = (tWid)*2.8;
+            var luas = 2*(pl+pt+lt);
+            var semen = Math.round((luas*9.68));
+            var pasir = Math.round((luas*0.045));
+            var jlhBata = luas;
+
+            if(jenis1=="1" || jenis1=="4"){
+              semen = Math.round(semen/50);
+            } else {
+              semen = Math.round(semen/40);
+            }
+            if(jenis3=="4" || jenis3=="5"){
+              jlhBata = Math.round(jlhBata*0.045);
+            } else {
+              jlhBata = Math.round(jlhBata*36);
+            }
+            $("#semen2").val(semen);
+            $("#pasir2").val(pasir);
+            $("#bata2").val(jlhBata);
+          } else if(itemType=="WC"){
+            $item.css("width",80);
+            $item.css("height",80);
+            $item.removeClass("tool-master");
+            $item.attr("id",itemType);
+            $item.css("z-index",3);
+            var tWid = parseInt($item.width());
+            var tHei = parseInt($item.height());
+            tWid = tWid/40;
+            tHei = tHei/40;
+
+            var pl = (tWid)*(tHei);
+            var pt = (tHei)*2.8;
+            var lt = (tWid)*2.8;
+            var luas = 2*(pl+pt+lt);
+            var semen = Math.round((luas*9.68));
+            var pasir = Math.round((luas*0.045));
+            var jlhBata = luas;
+
+            if(jenis1=="1" || jenis1=="4"){
+              semen = Math.round(semen/50);
+            } else {
+              semen = Math.round(semen/40);
+            }
+            if(jenis3=="4" || jenis3=="5"){
+              jlhBata = Math.round(jlhBata*0.045);
+            } else {
+              jlhBata = Math.round(jlhBata*36);
+            }
+            $("#semen3").val(semen);
+            $("#pasir3").val(pasir);
+            $("#bata3").val(jlhBata);
           } else {
             $item.removeClass("ui-widget-content tool-master");
             $item.attr("id",itemType);
@@ -137,38 +216,19 @@
           }
           var totalharga = $("#harga").val();
           var hargaTanah = $("#hargatanah").val();
-          var pl = (tWid)*(tHei);
-          var pt = (tHei)*2.8;
-          var lt = (tWid)*2.8;
-          var luas = 2*(pl+pt+lt);
-          var semen = Math.round((luas*9.68));
-          var pasir = Math.round((luas*0.045));
-          var jlhBata = Math.round(luas * 36);
-          var jenis1 = $("#jenis_semen").val();
-          var jenis2 = $("#jenis_pasir").val();
-          var jenis3 = $("#jenis_bata").val();
 
-          if(jenis1=="1" || jenis1=="4"){
-            semen = Math.round(semen/50);
-          } else {
-            semen = Math.round(semen/40);
-          }
-          if(jenis3=="4" || jenis3=="5"){
-            jlhBata = Math.round(luas*0.045);
-          }
+          var totalSemen = parseInt($("#semen1").val()) + parseInt($("#semen2").val()) + parseInt($("#semen3").val());
+          var totalPasir = parseInt($("#pasir1").val()) + parseInt($("#pasir2").val()) + parseInt($("#pasir3").val());
+          var totalBata = parseInt($("#bata1").val()) + parseInt($("#bata2").val()) + parseInt($("#bata3").val());
 
-          var old_1 = parseInt($("#qtysemen").val());
-          var old_2 = parseInt($("#qtypasir").val());
-          var old_3 = parseInt($("#qtybata").val());
-
-          $("#qtysemen").val(parseInt(old_1)+parseInt(semen));
-          $("#qtypasir").val(parseInt(old_2)+parseInt(pasir));
-          $("#qtybata").val(parseInt(old_3)+parseInt(jlhBata));
+          $("#qtysemen").val(totalSemen);
+          $("#qtypasir").val(totalPasir);
+          $("#qtybata").val(totalBata);
 
           $.ajax({
             type: 'POST',
             url: 'getPrice.php',
-            data: 'jenis_1='+jenis1+'&semen='+semen+'&jenis_2='+jenis2+'&pasir='+pasir+'&jenis_3='+jenis3+'&bata='+jlhBata,
+            data: 'jenis_1='+jenis1+'&semen='+totalSemen+'&jenis_2='+jenis2+'&pasir='+totalPasir+'&jenis_3='+jenis3+'&bata='+totalBata,
             dataType: 'json',
             success : function(data) {
               if (data.status == 'ok') {
@@ -225,6 +285,11 @@
     <script type="text/javascript">
       $(document).on("mouseover","div.item-child", function(event){
         var itemType = $(this).attr("name");
+
+        var jenis1 = $("#jenis_semen").val();
+        var jenis2 = $("#jenis_pasir").val();
+        var jenis3 = $("#jenis_bata").val();
+
         $(this).draggable({
           cursor: "move",
           containment: ".dropzone"
@@ -236,18 +301,6 @@
         $(this).resize(function() {
           var tWid = parseInt($(this).css("width"));
           var tHei = parseInt($(this).css("height"));
-          var t = "P:"+(tHei/40).toFixed(1)+"m <br />L:"+(tWid/60).toFixed(1)+"m";
-          var hargaTanah = ((tHei/40)*(tWid/60)) * 1000000;
-          $("#hargatanah").val(hargaTanah);
-          $(this)
-            .find("p")
-            .html(t);
-          $(this).addEventListener('mouseup', onUp);
-        });
-
-        function onUp(){
-          var tWid = parseInt($(this).css("width"));
-          var tHei = parseInt($(this).css("height"));
           var hargaTanah = $("#hargatanah").val();
           var t = "P:"+(tHei/40).toFixed(1)+"m <br />L:"+(tWid/60).toFixed(1)+"m";
           if(itemType=="tanah"){
@@ -256,9 +309,6 @@
             var pt = (tHei/40)*2.8;
             var lt = (tWid/60)*2.8;
             var luas = 2*(pl+pt+lt);
-            var jenis1 = $("#jenis_semen").val();
-            var jenis2 = $("#jenis_pasir").val();
-            var jenis3 = $("#jenis_bata").val();
 
             var semen = luas*9.68;
             var pasir = Math.round((luas*0.045));
@@ -280,9 +330,23 @@
             var old_2 = $("#qtypasir").val();
             var old_3 = $("#qtybata").val();
 
-            $("#qtysemen").val(parseInt(old_1)-parseInt(semen));
-            $("#qtypasir").val(parseInt(old_2)-parseInt(pasir));
-            $("#qtybata").val(parseInt(old_3)-parseInt(jlhBata));
+            $("#qtysemen").val(parseInt(semen));
+            $("#qtypasir").val(parseInt(pasir));
+            $("#qtybata").val(parseInt(jlhBata));
+
+            /* if(old_1==0){
+              $("#qtysemen").val(parseInt(semen));
+              $("#qtypasir").val(parseInt(pasir));
+              $("#qtybata").val(parseInt(jlhBata));
+            } else {
+              $("#qtysemen").val(parseInt(old_1)-parseInt(old_semen)+parseInt(semen));
+              $("#qtypasir").val(parseInt(old_2)-parseInt(old_pasir)+parseInt(pasir));
+              $("#qtybata").val(parseInt(old_3)-parseInt(old_jlhBata)+parseInt(jlhBata));
+            } */
+            
+            semen = $("#qtysemen").val();
+            pasir = $("#qtypasir").val();
+            jlhBata = $("#qtybata").val();
 
             var old_harga = $("#totalHarga").val();
             $.ajax({
@@ -310,9 +374,6 @@
             var pt = (tHei/40)*2.8;
             var lt = (tWid/40)*2.8;
             var luas = 2*(pl+pt+lt);
-            var jenis1 = $("#jenis_semen").val();
-            var jenis2 = $("#jenis_pasir").val();
-            var jenis3 = $("#jenis_bata").val();
 
             var semen = luas*9.68;
             var pasir = Math.round((luas*0.045));
@@ -352,7 +413,7 @@
               }
             });
           }
-        }
+        });
       });
     </script>
   </div>
@@ -429,6 +490,9 @@
         <option value="5">Semen Padang 40kg</option>
       </select>
       <label class="control-label">Semen</label>
+      <input type="text" class="form-control" id="semen1" name="semen1" value=0 readonly />
+      <input type="text" class="form-control" id="semen2" name="semen2" value=0 readonly />
+      <input type="text" class="form-control" id="semen3" name="semen3" value=0 readonly />
       <input type="text" class="form-control" id="qtysemen" name="qtysemen" placeholder="Jlh Semen" value=0 readonly />
     </div>
     <div class="col-md-3">
@@ -439,6 +503,9 @@
         <option value="25">Pasir Mundu / M3</option>
       </select>
       <label class="control-label">Pasir</label>
+      <input type="text" class="form-control" id="pasir1" name="pasir1" value=0 readonly />
+      <input type="text" class="form-control" id="pasir2" name="pasir2" value=0 readonly />
+      <input type="text" class="form-control" id="pasir3" name="pasir3" value=0 readonly />
       <input type="text" class="form-control" id="qtypasir" name="qtypasir" placeholder="Jlh Pasir" value=0 readonly />
     </div>
     <div class="col-md-3">
@@ -451,6 +518,9 @@
         <option value="10">Batu Koral / M3</option>
       </select>
       <label class="control-label">Batu Bata</label>
+      <input type="text" class="form-control" id="bata1" name="bata1" value=0 readonly />
+      <input type="text" class="form-control" id="bata2" name="bata2" value=0 readonly />
+      <input type="text" class="form-control" id="bata3" name="bata3" value=0 readonly />
       <input type="text" class="form-control" id="qtybata" name="qtybata" placeholder="Jlh Bata" value=0 readonly />
     </div>
   </form>
