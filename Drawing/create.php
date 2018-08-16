@@ -89,7 +89,7 @@
           var jenis2 = $("#jenis_pasir").val();
           var jenis3 = $("#jenis_bata").val();
           
-          if(itemType=="Tanah"){
+          if(itemType=="Lantai"){
             $item.css("width",200);
             $item.css("height",480);
             $item.removeClass("tool-master");
@@ -263,7 +263,7 @@
       <tr>
         <td class="tools">
           <div id="draggable" class="ui-widget-content tool-master" name="tanah">
-            <p>Tanah</p>
+            <p>Lantai</p>
           </div>
           <div id="draggable" class="ui-widget-content tool-master" name="door-pull">
             <img src="gfx/items-door-01.png" alt="Door Tarik" width="50" height="50" />
