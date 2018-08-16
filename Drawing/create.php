@@ -97,15 +97,15 @@
             $item.css("z-index",2);
             var tWid = parseInt($item.width());
             var tHei = parseInt($item.height());
-            var t = "P:"+(tHei/40)+"m <br />L:"+(tWid/60)+"m";
+            var t = "P:"+((tHei/40).toFixed(1)).replace('.0','')+"m <br />L:"+((tWid/60).toFixed(1)).replace('.0','')+"m";
+            $item
+              .find("p")
+              .html(t);
             var hargaTanah = ((tHei/40)*(tWid/60)) * 1000000; //$("#hargatanah").val();
             tWid = tWid/60;
             tHei = tHei/40;
             $("#hargatanah").val(hargaTanah);
             $("#ukuran").val((parseInt(tWid))+" x "+(parseInt(tHei)));
-            $item
-              .find("p")
-              .html(t);
             var pl = (tWid)*(tHei);
             var pt = (tHei)*2.8;
             var lt = (tWid)*2.8;
@@ -135,6 +135,10 @@
             $item.css("z-index",3);
             var tWid = parseInt($item.width());
             var tHei = parseInt($item.height());
+            var t = "P:"+((tHei/40).toFixed(1)).replace('.0','')+"m <br />L:"+((tWid/40).toFixed(1)).replace('.0','')+"m";
+            $item
+              .find("p")
+              .html(t);
             tWid = tWid/40;
             tHei = tHei/40;
 
@@ -167,6 +171,10 @@
             $item.css("z-index",3);
             var tWid = parseInt($item.width());
             var tHei = parseInt($item.height());
+            var t = "P:"+((tHei/40).toFixed(1)).replace('.0','')+"m <br />L:"+((tWid/40).toFixed(1)).replace('.0','')+"m";
+            $item
+              .find("p")
+              .html(t);
             tWid = tWid/40;
             tHei = tHei/40;
 
@@ -232,7 +240,7 @@
             dataType: 'json',
             success : function(data) {
               if (data.status == 'ok') {
-                $("#harga").val(parseInt(totalharga)+parseInt(data.totalHarga));
+                $("#harga").val(parseInt(data.totalHarga));
                   var grandTotal = parseInt($("#harga").val()) + parseInt(hargaTanah);
                   $("#totalHarga").val(grandTotal);
               }else{
@@ -302,17 +310,22 @@
           var tWid = parseInt($(this).css("width"));
           var tHei = parseInt($(this).css("height"));
           var hargaTanah = $("#hargatanah").val();
-          var t = "P:"+(tHei/40).toFixed(1)+"m <br />L:"+(tWid/60).toFixed(1)+"m";
+          var t = "P:"+((tHei/40).toFixed(1)).replace('.0','')+"m <br />L:"+((tWid/60).toFixed(1)).replace('.0','')+"m";
+          $(this)
+            .find("p")
+            .html(t);
           if(itemType=="tanah"){
-            var totalharga = $("#harga").val();
+            var hargaTanah = ((tHei/40)*(tWid/60)) * 1000000;
+            $("#hargatanah").val(hargaTanah);
+
             var pl = (tWid/60)*(tHei/40);
             var pt = (tHei/40)*2.8;
             var lt = (tWid/60)*2.8;
             var luas = 2*(pl+pt+lt);
 
-            var semen = luas*9.68;
+            var semen = Math.round((luas*9.68));
             var pasir = Math.round((luas*0.045));
-            var jlhBata = Math.round(luas * 36);
+            var jlhBata = luas;
 
             if(jenis1=="1" || jenis1=="4"){
               semen = Math.round(semen/50);
@@ -320,55 +333,63 @@
               semen = Math.round(semen/40);
             }
             if(jenis3=="4" || jenis3=="5"){
-              jlhBata = Math.round(luas*0.045);
-            }
-
-            var hargaTanah = ((tHei/40)*(tWid/60)) * 1000000;
-            $("#hargatanah").val(hargaTanah);
-
-            var old_1 = $("#qtysemen").val();
-            var old_2 = $("#qtypasir").val();
-            var old_3 = $("#qtybata").val();
-
-            $("#qtysemen").val(parseInt(semen));
-            $("#qtypasir").val(parseInt(pasir));
-            $("#qtybata").val(parseInt(jlhBata));
-
-            /* if(old_1==0){
-              $("#qtysemen").val(parseInt(semen));
-              $("#qtypasir").val(parseInt(pasir));
-              $("#qtybata").val(parseInt(jlhBata));
+              jlhBata = Math.round(jlhBata*0.045);
             } else {
-              $("#qtysemen").val(parseInt(old_1)-parseInt(old_semen)+parseInt(semen));
-              $("#qtypasir").val(parseInt(old_2)-parseInt(old_pasir)+parseInt(pasir));
-              $("#qtybata").val(parseInt(old_3)-parseInt(old_jlhBata)+parseInt(jlhBata));
-            } */
-            
-            semen = $("#qtysemen").val();
-            pasir = $("#qtypasir").val();
-            jlhBata = $("#qtybata").val();
+              jlhBata = Math.round(jlhBata*36);
+            }
+            $("#semen1").val(semen);
+            $("#pasir1").val(pasir);
+            $("#bata1").val(jlhBata);
+            var ukuran = ((tWid/60).toFixed(1)).replace('.0','') + " x " + ((tHei/40).toFixed(1)).replace('.0','');
+            $("#ukuran").val(ukuran);
+          } else if (itemType=="room") {
+            var pl = (tWid/40)*(tHei/40);
+            var pt = (tHei/40)*2.8;
+            var lt = (tWid/40)*2.8;
+            var luas = 2*(pl+pt+lt);
 
-            var old_harga = $("#totalHarga").val();
-            $.ajax({
-              type: 'POST',
-              url: 'getPrice.php',
-              data: 'jenis_1='+jenis1+'&semen='+semen+'&jenis_2='+jenis2+'&pasir='+pasir+'&jenis_3='+jenis3+'&bata='+jlhBata,
-              dataType: 'json',
-              success : function(data) {
-                if (data.status == 'ok') {
-                  $("#harga").val(parseInt(old_harga)-parseInt(totalharga)+parseInt(data.totalHarga));
-                  var grandTotal = parseInt($("#harga").val()) + parseInt(hargaTanah);
-                  $("#totalHarga").val(grandTotal);
-                  $("#ukuran").val((parseInt(tWid)/60)+" x "+(parseInt(tHei)/40));
-                } else{
-                  alert('Some problem occured, please try again.');
-                }
-              }
-            });
-            $(this)
-              .find("p")
-              .html(t);
-          } else {
+            var semen = Math.round((luas*9.68));
+            var pasir = Math.round((luas*0.045));
+            var jlhBata = luas;
+
+            if(jenis1=="1" || jenis1=="4"){
+              semen = Math.round(semen/50);
+            } else {
+              semen = Math.round(semen/40);
+            }
+            if(jenis3=="4" || jenis3=="5"){
+              jlhBata = Math.round(jlhBata*0.045);
+            } else {
+              jlhBata = Math.round(jlhBata*36);
+            }
+            $("#semen2").val(semen);
+            $("#pasir2").val(pasir);
+            $("#bata2").val(jlhBata);
+          } else if (itemType=="wc") {
+            var pl = (tWid/40)*(tHei/40);
+            var pt = (tHei/40)*2.8;
+            var lt = (tWid/40)*2.8;
+            var luas = 2*(pl+pt+lt);
+
+            var semen = Math.round((luas*9.68));
+            var pasir = Math.round((luas*0.045));
+            var jlhBata = luas;
+
+            if(jenis1=="1" || jenis1=="4"){
+              semen = Math.round(semen/50);
+            } else {
+              semen = Math.round(semen/40);
+            }
+            if(jenis3=="4" || jenis3=="5"){
+              jlhBata = Math.round(jlhBata*0.045);
+            } else {
+              jlhBata = Math.round(jlhBata*36);
+            }
+            $("#semen3").val(semen);
+            $("#pasir3").val(pasir);
+            $("#bata3").val(jlhBata);
+          }
+          /* else {
             var totalharga = $("#harga").val();
             var pl = (tWid/40)*(tHei/40);
             var pt = (tHei/40)*2.8;
@@ -412,7 +433,35 @@
                 }
               }
             });
-          }
+          } */
+
+          var totalharga = $("#harga").val();
+          var hargaTanah = $("#hargatanah").val();
+
+          var totalSemen = parseInt($("#semen1").val()) + parseInt($("#semen2").val()) + parseInt($("#semen3").val());
+          var totalPasir = parseInt($("#pasir1").val()) + parseInt($("#pasir2").val()) + parseInt($("#pasir3").val());
+          var totalBata = parseInt($("#bata1").val()) + parseInt($("#bata2").val()) + parseInt($("#bata3").val());
+
+          $("#qtysemen").val(totalSemen);
+          $("#qtypasir").val(totalPasir);
+          $("#qtybata").val(totalBata);
+
+          $.ajax({
+            type: 'POST',
+            url: 'getPrice.php',
+            data: 'jenis_1='+jenis1+'&semen='+totalSemen+'&jenis_2='+jenis2+'&pasir='+totalPasir+'&jenis_3='+jenis3+'&bata='+totalBata,
+            dataType: 'json',
+            success : function(data) {
+              if (data.status == 'ok') {
+                $("#harga").val(parseInt(data.totalHarga));
+                  var grandTotal = parseInt($("#harga").val()) + parseInt(hargaTanah);
+                  $("#totalHarga").val(grandTotal);
+              }else{
+                alert('Some problem occured, please try again.');
+              }
+            }
+          });
+
         });
       });
     </script>
@@ -490,9 +539,9 @@
         <option value="5">Semen Padang 40kg</option>
       </select>
       <label class="control-label">Semen</label>
-      <input type="text" class="form-control" id="semen1" name="semen1" value=0 readonly />
-      <input type="text" class="form-control" id="semen2" name="semen2" value=0 readonly />
-      <input type="text" class="form-control" id="semen3" name="semen3" value=0 readonly />
+      <input type="hidden" class="form-control" id="semen1" name="semen1" value=0 readonly />
+      <input type="hidden" class="form-control" id="semen2" name="semen2" value=0 readonly />
+      <input type="hidden" class="form-control" id="semen3" name="semen3" value=0 readonly />
       <input type="text" class="form-control" id="qtysemen" name="qtysemen" placeholder="Jlh Semen" value=0 readonly />
     </div>
     <div class="col-md-3">
@@ -503,9 +552,9 @@
         <option value="25">Pasir Mundu / M3</option>
       </select>
       <label class="control-label">Pasir</label>
-      <input type="text" class="form-control" id="pasir1" name="pasir1" value=0 readonly />
-      <input type="text" class="form-control" id="pasir2" name="pasir2" value=0 readonly />
-      <input type="text" class="form-control" id="pasir3" name="pasir3" value=0 readonly />
+      <input type="hidden" class="form-control" id="pasir1" name="pasir1" value=0 readonly />
+      <input type="hidden" class="form-control" id="pasir2" name="pasir2" value=0 readonly />
+      <input type="hidden" class="form-control" id="pasir3" name="pasir3" value=0 readonly />
       <input type="text" class="form-control" id="qtypasir" name="qtypasir" placeholder="Jlh Pasir" value=0 readonly />
     </div>
     <div class="col-md-3">
@@ -518,16 +567,16 @@
         <option value="10">Batu Koral / M3</option>
       </select>
       <label class="control-label">Batu Bata</label>
-      <input type="text" class="form-control" id="bata1" name="bata1" value=0 readonly />
-      <input type="text" class="form-control" id="bata2" name="bata2" value=0 readonly />
-      <input type="text" class="form-control" id="bata3" name="bata3" value=0 readonly />
+      <input type="hidden" class="form-control" id="bata1" name="bata1" value=0 readonly />
+      <input type="hidden" class="form-control" id="bata2" name="bata2" value=0 readonly />
+      <input type="hidden" class="form-control" id="bata3" name="bata3" value=0 readonly />
       <input type="text" class="form-control" id="qtybata" name="qtybata" placeholder="Jlh Bata" value=0 readonly />
     </div>
   </form>
   <script>
     $('#btn-success').click(function(){
       var filename = $("#rumah_name").val();
-      if(filename==null){
+      if(filename==null || filename==""){
         alert("Isi tipe rumah terlebih dahulu !"+filename);
       } else {
         html2canvas(document.querySelector('#canvas')).then(function(canvas) {
