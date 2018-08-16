@@ -214,7 +214,7 @@
                       $('#harga').text(harga.toLocaleString('it-IT', {style: 'currency', currency: 'IDR'}));
                       $('#min_dp').text(dp.toLocaleString('it-IT', {style: 'currency', currency: 'IDR'}));
                       if(lama > 20) {
-                        lama = "Lama KPR Melebihi 20 Tahun Perbesar Min. DP";
+                        lama = "Lama KPR Melebihi 20 Tahun Perbesar Kesanggupan";
                         $('#lama_kpr').text(lama);
                       } else {
                         $('#lama_kpr').text(lama+" Tahun");
@@ -272,7 +272,7 @@
                 <p id="harga"></p>
               </div>
               <div class="form-group">
-                <label>Min. DP</label>
+                <label>Kesanggupan</label>
                 <p id="min_dp"></p>
                 <input type="text" class="form-control" id="inp_dp" onkeypress="return fun_AllowOnlyAmountAndDot(this.id);" value="0" />
               </div>
@@ -422,7 +422,7 @@
               alert("Harga "+harga+" dengan DP "+dp);
               var cicilan = ((harga - dp) + pct) / (lama*12);
               if(lama > 20) {
-                lama = "Lama KPR Melebihi 20 Tahun Perbesar Min. DP";
+                lama = "Lama KPR Melebihi 20 Tahun Perbesar Kesanggupan";
                 $('#inp_lama').val(lama);
               } else {
                 $('#inp_lama').val(lama+" Tahun");
@@ -458,7 +458,7 @@
               alert("Harga "+harga+" dengan DP "+dp);
               var cicilan = ((harga - dp) + pct) / (lama*12);
               if(lama > 20) {
-                lama = "Lama KPR Melebihi 20 Tahun Perbesar Min. DP";
+                lama = "Lama KPR Melebihi 20 Tahun Perbesar Kesanggupan";
                 $('#inp_lama').val(lama);
               } else {
                 $('#inp_lama').val(lama+" Tahun");
@@ -494,7 +494,7 @@
               alert("Harga "+harga+" dengan DP "+dp);
               var cicilan = ((harga - dp) + pct) / (lama*12);
               if(lama > 20) {
-                lama = "Lama KPR Melebihi 20 Tahun Perbesar Min. DP";
+                lama = "Lama KPR Melebihi 20 Tahun Perbesar Kesanggupan";
                 $('#inp_lama').val(lama);
               } else {
                 $('#inp_lama').val(lama+" Tahun");
