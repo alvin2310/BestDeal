@@ -88,7 +88,7 @@
           var jenis1 = $("#jenis_semen").val();
           var jenis2 = $("#jenis_pasir").val();
           var jenis3 = $("#jenis_bata").val();
-          
+
           if(itemType=="Lantai"){
             $item.css("width",200);
             $item.css("height",480);
@@ -302,10 +302,24 @@
           cursor: "move",
           containment: ".dropzone"
         });
+        
         $(this).resizable({
           grid: 1,
           containment: ".dropzone"
         });
+
+        /* if(itemType=="room" || itemType=="wc"){
+          $(this).resizable({
+            grid: 0,
+            containment: "#Lantai"
+          });
+        } else {
+          $(this).resizable({
+            grid: 1,
+            containment: ".dropzone"
+          });
+        } */
+
         $(this).resize(function() {
           var tWid = parseInt($(this).css("width"));
           var tHei = parseInt($(this).css("height"));
