@@ -7,8 +7,8 @@ class Auth{
       $this->db = $this->db->OpenCon();
   }
 
-  public function saveRumah($rmID,$rumah_name,$alamat,$ukuran,$harga,$qtysemen,$qtypasir,$qtybata,$uid){
-      $query = "CALL usp_bd_rumah_sv($rmID,'$rumah_name','$alamat','$ukuran',$harga,$qtysemen,$qtypasir,$qtybata,$uid)";
+  public function saveRumah($rmID,$rumah_name,$alamat,$ukuran,$harga,$jenis_semen,$qtysemen,$jenis_pasir,$qtypasir,$jenis_bata,$qtybata,$uid){
+      $query = "CALL usp_bd_rumah_sv($rmID,'$rumah_name','$alamat','$ukuran',$harga,$jenis_semen,$qtysemen,$jenis_pasir,$qtypasir,$jenis_bata,$qtybata,$uid)";
       echo $query;
       $result = $this->db->prepare($query);
       if($result->execute()){

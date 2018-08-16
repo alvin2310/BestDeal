@@ -8,7 +8,7 @@
     extract($_POST);
     $rmID = isset($_GET['rumah_id']) ? $_GET['rumah_id'] : 0;
     $uid = $_SESSION['user_id'];
-    $create = $user->saveRumah($rmID,$rumah_name,$alamat,$ukuran,$harga,$qtysemen,$qtypasir,$qtybata,$uid);
+    $create = $user->saveRumah($rmID,$rumah_name,$alamat,$ukuran,$totalHarga,$jenis_semen,$qtysemen,$jenis_pasir,$qtypasir,$jenis_bata,$qtybata,$uid);
 		if ($create) {
         echo "<script type='text/javascript'>
           alert('Data telah terupdate !');
