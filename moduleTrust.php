@@ -30,11 +30,11 @@ class Module{
         $tblUser = array();
         $query1 = "SELECT *
                   FROM tbl_users A
-                  WHERE A.user_id<>12
-                  AND ((user_earn-user_spent)>".$thisUser[0]['selisih']." 
-                  OR (simpanan*0.2)>(".$thisUser[0]['simpanan']."*0.2))
+                  WHERE A.user_id<>$user_id
+                  AND (simpanan*0.2)>(".$thisUser[0]['simpanan']."*0.2)
                   AND A.user_earn<>0 AND A.user_spent<>0
                   LIMIT 3";
+        //echo $query1;
         $hasil = $kns->OpenCon()->query($query1);
         while ($data=mysqli_fetch_assoc($hasil)) {
           $item=array(
@@ -49,9 +49,8 @@ class Module{
         }
         $query = "SELECT *
                   FROM tbl_users A
-                  WHERE A.user_id<>12
-                  AND ((user_earn-user_spent)<".$thisUser[0]['selisih']." 
-                  OR (simpanan*0.2)<(".$thisUser[0]['simpanan']."*0.2))
+                  WHERE A.user_id<>$user_id
+                  AND (simpanan*0.2)<(".$thisUser[0]['simpanan']."*0.2)
                   AND A.user_earn<>0 AND A.user_spent<>0
                   LIMIT 1";
         //echo $query;

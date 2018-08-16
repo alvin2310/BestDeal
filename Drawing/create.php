@@ -236,6 +236,18 @@
         $(this).resize(function() {
           var tWid = parseInt($(this).css("width"));
           var tHei = parseInt($(this).css("height"));
+          var t = "P:"+(tHei/40).toFixed(1)+"m <br />L:"+(tWid/60).toFixed(1)+"m";
+          var hargaTanah = ((tHei/40)*(tWid/60)) * 1000000;
+          $("#hargatanah").val(hargaTanah);
+          $(this)
+            .find("p")
+            .html(t);
+          $(this).addEventListener('mouseup', onUp);
+        });
+
+        function onUp(){
+          var tWid = parseInt($(this).css("width"));
+          var tHei = parseInt($(this).css("height"));
           var hargaTanah = $("#hargatanah").val();
           var t = "P:"+(tHei/40).toFixed(1)+"m <br />L:"+(tWid/60).toFixed(1)+"m";
           if(itemType=="tanah"){
@@ -340,7 +352,7 @@
               }
             });
           }
-        });
+        }
       });
     </script>
   </div>
